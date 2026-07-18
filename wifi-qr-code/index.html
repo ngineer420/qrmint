@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wi-Fi QR Code Generator — Share Your Network Instantly | QR Mint</title>
+<meta name="description" content="Turn your Wi-Fi name and password into a scannable QR code. Guests join instantly — no typing. Free, private, and generated entirely in your browser.">
+<link rel="canonical" href="https://qrmint.net/wifi-qr-code/">
+<meta name="theme-color" content="#071913">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wi-Fi QR Code Generator — Share Your Network Instantly">
+<meta property="og:description" content="Turn your Wi-Fi name and password into a scannable QR code. Guests join instantly — no typing. Free and 100% client-side.">
+<meta property="og:url" content="https://qrmint.net/wifi-qr-code/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wi-Fi QR Code Generator — Share Your Network Instantly">
+<meta name="twitter:description" content="Turn your Wi-Fi name and password into a scannable QR code. Guests join instantly — no typing.">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Wi-Fi QR Code Generator — QR Mint",
+  "url": "https://qrmint.net/wifi-qr-code/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based Wi-Fi QR code generator. Encodes network name, password and security type into a scannable code that joins devices instantly."
+}
+</script>
+
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Wi&#8209;Fi <span class="mint-of">QR code</span> generator</h1>
+      <p class="lede">Enter your network name and password once. Anyone who scans the code joins instantly — no typing, no spelling out a password across a room.</p>
+      <p class="trust-line">100% client-side<span class="dot">•</span>password never leaves your browser<span class="dot">•</span>free</p>
+    </div>
+  </div>
+
+  <nav role="tablist" class="tabbar" aria-label="QR code type">
+    <a role="tab" href="/" class="tab-btn">Link</a>
+    <a role="tab" href="/wifi-qr-code/" class="tab-btn is-active" aria-current="page">Wi&#8209;Fi</a>
+    <a role="tab" href="/vcard-qr-code/" class="tab-btn">Contact card</a>
+    <a role="tab" href="/" class="tab-btn">Text</a>
+  </nav>
+
+  <div class="generator-grid">
+    <div>
+      <section id="panel-wifi" class="tab-panel active">
+        <div class="panel">
+          <h2>Wi&#8209;Fi network</h2>
+          <div class="field">
+            <label for="wifi-ssid">Network name (SSID)</label>
+            <input type="text" id="wifi-ssid" placeholder="My Home Wi-Fi" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="two-col">
+            <div class="field" style="margin-bottom:0;">
+              <label for="wifi-password">Password</label>
+              <div class="password-field">
+                <input type="password" id="wifi-password" placeholder="••••••••" autocomplete="off" spellcheck="false">
+                <button type="button" id="wifi-toggle-pw" class="icon-btn">Show</button>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="wifi-enc">Security</label>
+              <select id="wifi-enc">
+                <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Open (no password)</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkbox-row" style="margin-top:14px;">
+            <input type="checkbox" id="wifi-hidden">
+            <label for="wifi-hidden">Hidden network</label>
+          </div>
+          <p class="field-hint">Scanning this code joins the network instantly — no typing required on the other end.</p>
+        </div>
+      </section>
+
+      <div class="panel" style="margin-top:16px;">
+        <h2>Options</h2>
+        <div class="options-grid">
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-size">Size</label>
+            <select id="opt-size">
+              <option value="256">Small (256px)</option>
+              <option value="512" selected>Medium (512px)</option>
+              <option value="768">Large (768px)</option>
+              <option value="1024">X-Large (1024px)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-ecl">Error correction</label>
+            <select id="opt-ecl">
+              <option value="L">L — ~7%</option>
+              <option value="M" selected>M — ~15%</option>
+              <option value="Q">Q — ~25%</option>
+              <option value="H">H — ~30%</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-margin">Margin</label>
+            <select id="opt-margin">
+              <option value="2">Tight</option>
+              <option value="4" selected>Standard</option>
+              <option value="6">Wide</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Colors</label>
+            <div class="color-field">
+              <input type="color" id="opt-fg" value="#0b2119" aria-label="Foreground color">
+              <input type="color" id="opt-bg" value="#ffffff" aria-label="Background color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="qr-stage-wrap">
+        <div class="qr-ring" aria-hidden="true"></div>
+        <div class="qr-stage" id="qr-stage">
+          <div class="qr-stage-inner">
+            <canvas id="qr-canvas" width="220" height="220" role="img" aria-label="Generated Wi-Fi QR code preview"></canvas>
+          </div>
+          <div class="mint-badge" id="mint-badge" aria-hidden="true">MINTED<br>✓</div>
+        </div>
+        <p class="field-hint" id="qr-empty">Enter a network name to mint your Wi&#8209;Fi QR code.</p>
+        <div class="qr-meta" id="qr-meta"></div>
+        <p class="qr-warning" id="qr-warning" hidden></p>
+        <div class="qr-actions">
+          <button type="button" class="primary" id="qr-download-png" disabled>Mint PNG</button>
+          <button type="button" class="primary" id="qr-download-svg" disabled>Mint SVG</button>
+          <div class="copy-flash-wrap">
+            <button type="button" class="icon-btn" id="qr-copy-payload" disabled>Copy data</button>
+            <span class="copy-flash" id="qr-copy-flash">Copied!</span>
+          </div>
+        </div>
+        <div class="payload-preview" id="qr-payload-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="container-narrow explainer">
+    <h2>About the Wi&#8209;Fi QR code format</h2>
+    <p>This tool encodes your network details using the standard <code>WIFI:</code> payload that iOS and Android's camera apps recognize automatically — no separate app required. Scanning the code offers to join the network directly; on most phones a single tap connects. The <strong>security type</strong> matters: pick WPA/WPA2/WPA3 for almost any modern router, WEP only for very old hardware, or "Open" for networks with no password at all.</p>
+    <h2>Is it safe to print a Wi&#8209;Fi QR code?</h2>
+    <p>The code contains your actual password in plain text once decoded, so treat a printed Wi&#8209;Fi QR code the way you'd treat the password itself — fine for a home entryway or a guest-only network, less fine for a shop window facing a public street. For a guest network with no lasting risk, set up a router-level guest SSID and point the code at that instead of your primary network.</p>
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Which phones can scan a Wi&#8209;Fi QR code?</h3>
+      <p>Any iPhone running iOS 11+ and any Android phone running Android 10+ can scan and join directly from the built-in camera app. Older phones may need a separate QR scanner app that supports Wi&#8209;Fi payloads.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does this work for 5GHz networks?</h3>
+      <p>Yes — the QR code just carries the network name and password; it works the same regardless of which band or channel the router uses.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if my network name or password has special characters?</h3>
+      <p>QR Mint automatically escapes semicolons, commas, colons, quotes and backslashes so the payload stays valid no matter what's in your SSID or password.</p>
+    </div>
+  </section>
+
+  <nav class="container-narrow" aria-label="Other QR code types" style="padding-top:0;">
+    <h2 style="margin-top:0;">More QR code types</h2>
+    <ul>
+      <li><a href="/vcard-qr-code/">vCard QR Code Generator</a> — turn a contact into a scannable card.</li>
+      <li><a href="/">Link &amp; text QR codes</a> — the full generator with all four modes.</li>
+    </ul>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+
+<script src="/assets/js/qrcodegen.js"></script>
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

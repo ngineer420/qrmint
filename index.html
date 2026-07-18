@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)</title>
+<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — free, instant, and 100% in your browser. Download as PNG or SVG. Nothing is ever uploaded.">
+<link rel="canonical" href="https://qrmint.net/">
+<meta name="theme-color" content="#071913">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
+<meta property="og:description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — free, instant, and 100% in your browser. Download as PNG or SVG.">
+<meta property="og:url" content="https://qrmint.net/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
+<meta name="twitter:description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — free, instant, and 100% in your browser.">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "QR Mint",
+  "url": "https://qrmint.net/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based QR code generator for URLs, Wi-Fi networks, vCard contact cards and plain text, with PNG and SVG download. Runs entirely client-side."
+}
+</script>
+
+<!-- No-flash theme init: read the stored preference before first paint. -->
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero">
+    <div class="hero-modules" aria-hidden="true">
+      <svg viewBox="0 0 600 160" preserveAspectRatio="xMidYMid slice">
+        <rect x="344" y="28" width="8" height="8" style="animation-delay:0.18s"/>
+        <rect x="160" y="101" width="5" height="5" style="animation-delay:1.58s"/>
+        <rect x="570" y="4" width="5" height="5" style="animation-delay:1.39s"/>
+        <rect x="267" y="83" width="6" height="6" style="animation-delay:1.43s"/>
+        <rect x="128" y="72" width="7" height="7" style="animation-delay:1.37s"/>
+        <rect x="34" y="99" width="7" height="7" style="animation-delay:1.12s"/>
+        <rect x="157" y="18" width="8" height="8" style="animation-delay:0.31s"/>
+        <rect x="125" y="93" width="7" height="7" style="animation-delay:1.72s"/>
+        <rect x="78" y="116" width="8" height="8" style="animation-delay:0.45s"/>
+        <rect x="11" y="5" width="8" height="8" style="animation-delay:1.32s"/>
+        <rect x="267" y="71" width="6" height="6" style="animation-delay:0.53s"/>
+        <rect x="163" y="38" width="5" height="5" style="animation-delay:0.81s"/>
+        <rect x="289" y="97" width="7" height="7" style="animation-delay:0.68s"/>
+        <rect x="527" y="123" width="5" height="5" style="animation-delay:1.00s"/>
+        <rect x="154" y="43" width="6" height="6" style="animation-delay:1.44s"/>
+        <rect x="427" y="23" width="8" height="8" style="animation-delay:0.98s"/>
+        <rect x="138" y="42" width="7" height="7" style="animation-delay:0.33s"/>
+        <rect x="45" y="30" width="8" height="8" style="animation-delay:1.57s"/>
+        <rect x="67" y="18" width="6" height="6" style="animation-delay:1.16s"/>
+        <rect x="533" y="37" width="6" height="6" style="animation-delay:1.48s"/>
+        <rect x="580" y="104" width="8" height="8" style="animation-delay:1.58s"/>
+        <rect x="200" y="27" width="6" height="6" style="animation-delay:1.11s"/>
+        <rect x="518" y="12" width="5" height="5" style="animation-delay:1.68s"/>
+        <rect x="203" y="39" width="6" height="6" style="animation-delay:1.60s"/>
+        <rect x="458" y="97" width="7" height="7" style="animation-delay:1.47s"/>
+        <rect x="109" y="64" width="7" height="7" style="animation-delay:0.87s"/>
+        <rect x="26" y="27" width="8" height="8" style="animation-delay:0.64s"/>
+        <rect x="362" y="3" width="6" height="6" style="animation-delay:1.73s"/>
+        <rect x="66" y="23" width="5" height="5" style="animation-delay:1.74s"/>
+        <rect x="77" y="89" width="8" height="8" style="animation-delay:0.54s"/>
+        <rect x="222" y="40" width="8" height="8" style="animation-delay:1.74s"/>
+        <rect x="493" y="99" width="5" height="5" style="animation-delay:1.24s"/>
+        <rect x="394" y="128" width="6" height="6" style="animation-delay:1.44s"/>
+        <rect x="234" y="107" width="5" height="5" style="animation-delay:0.98s"/>
+        <rect x="463" y="68" width="7" height="7" style="animation-delay:0.79s"/>
+        <rect x="393" y="77" width="5" height="5" style="animation-delay:0.90s"/>
+        <rect x="121" y="1" width="8" height="8" style="animation-delay:1.58s"/>
+        <rect x="91" y="77" width="5" height="5" style="animation-delay:0.36s"/>
+        <rect x="149" y="138" width="6" height="6" style="animation-delay:1.62s"/>
+        <rect x="193" y="146" width="8" height="8" style="animation-delay:0.90s"/>
+        <rect x="158" y="0" width="6" height="6" style="animation-delay:1.64s"/>
+        <rect x="349" y="134" width="6" height="6" style="animation-delay:1.18s"/>
+        <rect x="308" y="135" width="8" height="8" style="animation-delay:0.40s"/>
+        <rect x="279" y="73" width="5" height="5" style="animation-delay:1.45s"/>
+        <rect x="498" y="32" width="8" height="8" style="animation-delay:0.52s"/>
+        <rect x="450" y="27" width="8" height="8" style="animation-delay:0.15s"/>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <h1>Mint a <span class="mint-of">QR code</span> in your browser</h1>
+      <p class="lede">Links, Wi-Fi logins, contact cards, or plain text — build it, watch it come to life, download it as PNG or SVG. Nothing you type ever leaves this tab.</p>
+      <p class="trust-line">100% client-side<span class="dot">•</span>no sign-up<span class="dot">•</span>works offline once loaded</p>
+    </div>
+  </div>
+
+  <nav role="tablist" class="tabbar" aria-label="QR code type">
+    <a role="tab" id="tab-url" href="/" aria-controls="panel-url" aria-selected="true" aria-current="page" class="tab-btn is-active">Link</a>
+    <a role="tab" id="tab-wifi" href="/wifi-qr-code/" aria-controls="panel-wifi" aria-selected="false" class="tab-btn" tabindex="-1">Wi&#8209;Fi</a>
+    <a role="tab" id="tab-vcard" href="/vcard-qr-code/" aria-controls="panel-vcard" aria-selected="false" class="tab-btn" tabindex="-1">Contact card</a>
+    <a role="tab" id="tab-text" href="/" aria-controls="panel-text" aria-selected="false" class="tab-btn" tabindex="-1">Text</a>
+  </nav>
+
+  <div class="generator-grid">
+    <div>
+      <!-- ===================== LINK / URL ===================== -->
+      <section role="tabpanel" id="panel-url" aria-labelledby="tab-url" class="tab-panel active">
+        <div class="panel">
+          <h2>Link</h2>
+          <div class="field">
+            <label for="url-input">Website or link</label>
+            <input type="text" id="url-input" placeholder="example.com or https://example.com/page" autocomplete="off" spellcheck="false">
+            <p class="field-hint">No <code>https://</code>? We'll add it for you.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== WIFI ===================== -->
+      <section role="tabpanel" id="panel-wifi" aria-labelledby="tab-wifi" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Wi&#8209;Fi network</h2>
+          <div class="field">
+            <label for="wifi-ssid">Network name (SSID)</label>
+            <input type="text" id="wifi-ssid" placeholder="My Home Wi-Fi" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="two-col">
+            <div class="field" style="margin-bottom:0;">
+              <label for="wifi-password">Password</label>
+              <div class="password-field">
+                <input type="password" id="wifi-password" placeholder="••••••••" autocomplete="off" spellcheck="false">
+                <button type="button" id="wifi-toggle-pw" class="icon-btn">Show</button>
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="wifi-enc">Security</label>
+              <select id="wifi-enc">
+                <option value="WPA" selected>WPA / WPA2 / WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Open (no password)</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkbox-row" style="margin-top:14px;">
+            <input type="checkbox" id="wifi-hidden">
+            <label for="wifi-hidden">Hidden network</label>
+          </div>
+          <p class="field-hint">Scanning this code joins the network instantly — no typing required on the other end.</p>
+        </div>
+      </section>
+
+      <!-- ===================== VCARD ===================== -->
+      <section role="tabpanel" id="panel-vcard" aria-labelledby="tab-vcard" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Contact card</h2>
+          <div class="field-grid cols-2">
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-first">First name</label>
+              <input type="text" id="vc-first" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-last">Last name</label>
+              <input type="text" id="vc-last" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-phone">Phone</label>
+              <input type="tel" id="vc-phone" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-email">Email</label>
+              <input type="email" id="vc-email" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-org">Organization</label>
+              <input type="text" id="vc-org" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-title">Job title</label>
+              <input type="text" id="vc-title" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-url">Website</label>
+              <input type="text" id="vc-url" placeholder="example.com" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-address">Address</label>
+              <input type="text" id="vc-address" placeholder="123 Main St, City" autocomplete="off">
+            </div>
+          </div>
+          <p class="field-hint" style="margin-top:14px;">Scanning this saves a real contact card — name, number, email and all — straight to the phone's address book.</p>
+        </div>
+      </section>
+
+      <!-- ===================== TEXT ===================== -->
+      <section role="tabpanel" id="panel-text" aria-labelledby="tab-text" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Plain text</h2>
+          <div class="field">
+            <label for="text-input" class="visually-hidden">Text to encode</label>
+            <textarea id="text-input" rows="8" placeholder="Any note, code, or message up to a few thousand characters…" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <div class="panel" style="margin-top:16px;">
+        <h2>Options</h2>
+        <div class="options-grid">
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-size">Size</label>
+            <select id="opt-size">
+              <option value="256">Small (256px)</option>
+              <option value="512" selected>Medium (512px)</option>
+              <option value="768">Large (768px)</option>
+              <option value="1024">X-Large (1024px)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-ecl">Error correction</label>
+            <select id="opt-ecl">
+              <option value="L">L — ~7%</option>
+              <option value="M" selected>M — ~15%</option>
+              <option value="Q">Q — ~25%</option>
+              <option value="H">H — ~30%</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-margin">Margin</label>
+            <select id="opt-margin">
+              <option value="2">Tight</option>
+              <option value="4" selected>Standard</option>
+              <option value="6">Wide</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Colors</label>
+            <div class="color-field">
+              <input type="color" id="opt-fg" value="#0b2119" aria-label="Foreground color">
+              <input type="color" id="opt-bg" value="#ffffff" aria-label="Background color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="qr-stage-wrap">
+        <div class="qr-ring" aria-hidden="true"></div>
+        <div class="qr-stage" id="qr-stage">
+          <div class="qr-stage-inner">
+            <canvas id="qr-canvas" width="220" height="220" role="img" aria-label="Generated QR code preview"></canvas>
+          </div>
+          <div class="mint-badge" id="mint-badge" aria-hidden="true">MINTED<br>✓</div>
+        </div>
+        <p class="field-hint" id="qr-empty">Enter a link to mint your QR code.</p>
+        <div class="qr-meta" id="qr-meta"></div>
+        <p class="qr-warning" id="qr-warning" hidden></p>
+        <div class="qr-actions">
+          <button type="button" class="primary" id="qr-download-png" disabled>Mint PNG</button>
+          <button type="button" class="primary" id="qr-download-svg" disabled>Mint SVG</button>
+          <div class="copy-flash-wrap">
+            <button type="button" class="icon-btn" id="qr-copy-payload" disabled>Copy data</button>
+            <span class="copy-flash" id="qr-copy-flash">Copied!</span>
+          </div>
+        </div>
+        <div class="payload-preview" id="qr-payload-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="container-narrow explainer">
+    <h2>How QR Mint works</h2>
+    <p>QR Mint builds every code with a compact <strong>QR Code encoder that runs entirely inside your browser</strong> — the same Reed–Solomon error correction and masking logic used by professional QR libraries, just with no server round-trip. Type a link, Wi&#8209;Fi network, contact, or note; the preview updates live; hit <strong>Mint PNG</strong> or <strong>Mint SVG</strong> to download. Nothing you enter is ever sent anywhere — close the tab and it's gone.</p>
+    <h2>Choosing an error-correction level</h2>
+    <p>QR codes carry their own repair data, so they can still scan even if part of the code is scuffed, glared, or partly covered by a logo. Higher levels (Q, H) survive more damage but need a denser, larger code for the same content — L or M is plenty for a clean screen or sticker; go higher for anything printed small, laminated, or likely to get scratched.</p>
+    <h2>Where you'll see QR codes minted here</h2>
+    <ul>
+      <li>Business cards and event badges (contact card mode)</li>
+      <li>Cafés, Airbnbs and offices sharing Wi&#8209;Fi (Wi&#8209;Fi mode)</li>
+      <li>Posters, packaging and menus linking to a page (link mode)</li>
+      <li>Anywhere you need a scan-to-read note (text mode)</li>
+    </ul>
+  </section>
+
+  <section class="container-narrow explainer" id="articles">
+    <h2>Learn more about QR codes</h2>
+    <div class="article-cards">
+      <div class="faq-item">
+        <h3><a href="/articles/how-qr-codes-work.html">How QR codes actually work</a></h3>
+        <p>Modules, finder patterns, and Reed–Solomon error correction — the anatomy of a QR code, explained from the pixel up.</p>
+      </div>
+      <div class="faq-item">
+        <h3><a href="/articles/qr-code-error-correction-levels-explained.html">Error correction levels explained: L, M, Q, H</a></h3>
+        <p>What each level actually tolerates, how much bigger the code gets, and how to pick the right one for print vs. screen.</p>
+      </div>
+      <div class="faq-item">
+        <h3><a href="/articles/how-to-share-wifi-with-a-qr-code.html">How to share Wi&#8209;Fi with a QR code</a></h3>
+        <p>The WIFI: payload format, what phones do when they scan it, and the security tradeoffs worth knowing before you print one.</p>
+      </div>
+      <div class="faq-item">
+        <h3><a href="/articles/qr-code-design-tips-that-still-scan.html">QR code design tips that still scan</a></h3>
+        <p>Colors, contrast, logos, and quiet zones — how far you can push the look of a code before a scanner gives up on it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-narrow explainer">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <h3>Is this really free, with no sign-up?</h3>
+      <p>Yes. QR Mint doesn't have accounts, limits, or watermarks — mint as many codes as you like.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Do my QR codes expire?</h3>
+      <p>No. Every code QR Mint generates encodes your actual content directly (a "static" QR code) — there's no redirect service in the middle that could go offline or expire.</p>
+    </div>
+    <div class="faq-item">
+      <h3>PNG or SVG — which should I use?</h3>
+      <p>SVG is a vector file that stays crisp at any size — best for print, posters, and anything you might resize later. PNG is a fixed-size image — simplest for slides, docs, and the web.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does anything I type get uploaded?</h3>
+      <p>No. Every code is built and rendered locally, in your browser's own memory. QR Mint has no backend that ever sees your links, Wi&#8209;Fi password, or contact details.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/wifi-qr-code/">Wi&#8209;Fi QR Code</a>
+      <a href="/vcard-qr-code/">vCard QR Code</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+
+<script src="/assets/js/qrcodegen.js"></script>
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

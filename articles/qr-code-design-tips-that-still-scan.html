@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Design Tips That Still Scan — QR Mint</title>
+<meta name="description" content="Colors, contrast, logos, and quiet zones — how far you can push the look of a QR code before a scanner gives up on it.">
+<link rel="canonical" href="https://qrmint.net/articles/qr-code-design-tips-that-still-scan.html">
+<meta name="theme-color" content="#071913">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+  </div>
+</header>
+<main class="container-narrow">
+  <h1>QR Code Design Tips That Still Scan</h1>
+
+  <p>A QR code is more forgiving than it looks — it can survive glare, dirt, a torn corner, even a logo stamped over the middle. But that resilience has real limits, and a surprising number of "designed" QR codes fail to scan simply because someone pushed past them without testing. Here's what actually matters if you want a code that looks intentional and still works every time.</p>
+
+  <h2>Contrast is the one rule that isn't negotiable</h2>
+  <p>Scanners work by distinguishing dark modules from light ones, so the single biggest thing that breaks a QR code is <strong>low contrast</strong> between foreground and background — a mint-on-white code reads fine, a light mint on pale cream might not. QR Mint checks this automatically and warns you when your chosen colors fall below a safe contrast ratio, but the safest starting point is still close to black on white or white on black; treat any color pairing as an experiment to verify, not a given. Dark foreground on light background is the traditional (and most tested) arrangement — inverted codes, light-on-dark, do work with most modern scanners, but are more likely to trip up older or cheaper scanning hardware.</p>
+
+  <h2>Leave the quiet zone alone</h2>
+  <p>The blank margin surrounding a QR code — the "quiet zone" — isn't wasted space; scanners use that clear border to recognize where the code starts and stops. Crop it too tight, or place the code hard against a busy background or another graphic element with no buffer, and detection gets noticeably less reliable, especially at an angle or from a distance. QR Mint's "Margin" option controls exactly this: the default "Standard" setting matches the spec's recommended minimum, and it's rarely worth shrinking it just to save a little space.</p>
+
+  <h2>Logos and color are fine — in moderation</h2>
+  <p>A small logo centered over a QR code works because of the error correction baked into the code itself — see our <a href="/articles/qr-code-error-correction-levels-explained.html">guide to error-correction levels</a> — but it only works reliably at the highest level (<strong>H</strong>, tolerating about 30% damage), and even then, the safe zone is smaller than people assume: roughly up to 20–25% of the code's total area, centered, without touching the three corner finder patterns, which a scanner absolutely needs intact. Color works the same way as contrast: recoloring the whole code is fine as long as the contrast ratio holds; recoloring only part of it, or adding a busy background image behind it, is where scans start failing unpredictably.</p>
+
+  <h2>Size and distance</h2>
+  <p>A QR code needs to be large enough, relative to the scanning distance, for a camera to resolve individual modules. A rough rule of thumb: the code's printed width should be at least the expected scanning distance divided by 10 — a code meant to be scanned from about a meter away wants to be roughly 10cm (4 inches) across at minimum, and more if the content is long enough to require a denser, higher-version code with smaller individual modules. This is another reason to keep encoded content reasonably concise where the physical size is fixed and small, like a business card.</p>
+
+  <h2>Before you print anything</h2>
+  <ul>
+    <li>Test the exact file you'll print, at the exact size you'll print it, from a few different phones if possible — not just a version on your screen.</li>
+    <li>Prefer SVG over PNG for anything getting resized or printed at a specific physical dimension — it stays crisp instead of blurring as it scales.</li>
+    <li>Check the code again after lamination, embossing, or any finish that adds a reflective layer — glare is a common last-minute scan-killer that's easy to miss on a screen preview.</li>
+  </ul>
+
+  <h2>Keep reading</h2>
+  <ul>
+    <li><a href="/articles/qr-code-error-correction-levels-explained.html">Error correction levels explained: L, M, Q, H</a></li>
+    <li><a href="/articles/how-qr-codes-work.html">How QR codes actually work</a></li>
+    <li><a href="/">Mint a QR code</a></li>
+  </ul>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

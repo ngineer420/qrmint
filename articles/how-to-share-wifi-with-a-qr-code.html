@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Share Wi-Fi With a QR Code — QR Mint</title>
+<meta name="description" content="The WIFI: payload format, what phones do when they scan it, and the security tradeoffs worth knowing before you print one.">
+<link rel="canonical" href="https://qrmint.net/articles/how-to-share-wifi-with-a-qr-code.html">
+<meta name="theme-color" content="#071913">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+  </div>
+</header>
+<main class="container-narrow">
+  <h1>How to Share Wi&#8209;Fi With a QR Code</h1>
+
+  <p>Reading a Wi&#8209;Fi password off a router sticker, spelling it out letter by letter across a room, or texting it to a guest is one of the small frictions of hosting anyone — friends, Airbnb guests, café customers. A Wi&#8209;Fi QR code replaces all of that with a single scan. Here's what's actually inside one, and what to think about before you print it somewhere permanent.</p>
+
+  <h2>What's really encoded</h2>
+  <p>A Wi&#8209;Fi QR code is a plain-text QR code whose content follows a small, widely-supported convention that starts with <code>WIFI:</code>, followed by fields for the security type, network name, and password, each separated by semicolons — for example <code>WIFI:T:WPA;S:MyNetwork;P:mypassword;;</code>. There's no special "Wi&#8209;Fi mode" in the QR standard itself; it's an ordinary text payload that phone operating systems have agreed to recognize and act on specially. That's also why <a href="/wifi-qr-code/">QR Mint's Wi&#8209;Fi generator</a> is really a text-QR-code generator with a form built around this exact convention, escaping any semicolons, commas, colons, or quotes in your network name or password so the payload stays valid no matter what characters they contain.</p>
+
+  <h2>What happens when someone scans it</h2>
+  <p>Modern phones treat this payload specially: iPhones running iOS 11 or later and Android phones running Android 10 or later recognize the <code>WIFI:</code> format directly in the built-in camera app, and scanning it pops up a "Join Network" prompt with the name pre-filled — one tap, and the phone connects, no password ever typed by hand. Older phones, or ones running very locked-down camera software, may need a dedicated QR scanner app instead, but the underlying payload works the same way regardless of which app reads it.</p>
+
+  <h2>Choosing the right security type</h2>
+  <p>The security field matters more than it might seem. <strong>WPA/WPA2/WPA3</strong> covers essentially every router sold in the last decade and is almost always the right choice. <strong>WEP</strong> is an old, weak encryption standard — only pick it if you know for certain that's what an older router is actually using, since selecting the wrong type will produce a code that fails to connect. <strong>Open (no password)</strong> is for networks with no password at all; scanning it still saves a step by pre-filling the network name, even though there's nothing to authenticate.</p>
+
+  <h2>The security tradeoff worth knowing</h2>
+  <p>A Wi&#8209;Fi QR code decodes back into your actual password in plain text — anyone who scans it, or even just photographs it and decodes it later, has the real credential, not a disguised or temporary one. That's perfectly fine for a note taped inside a front door for house guests, but worth a second thought before it goes somewhere more exposed, like a shop window facing the street or a public lobby. If you want to hand out Wi&#8209;Fi access broadly without exposing your primary network, set up a separate <strong>guest network</strong> on your router (most consumer routers support this) and generate the QR code for that instead — guests get internet access, and your primary network and any devices on it stay isolated from anyone who scans the code.</p>
+
+  <h2>A couple of practical tips</h2>
+  <ul>
+    <li>Test the code on your own phone before printing or laminating anything — a mistyped password is the single most common reason a Wi&#8209;Fi QR code fails.</li>
+    <li>If the network name or password ever changes, the old QR code stops working silently; there's no way to update a printed code in place, so plan to reprint when credentials rotate.</li>
+    <li>For anything printed and handled — a card by the front desk, a laminated sign — consider a higher <a href="/articles/qr-code-error-correction-levels-explained.html">error-correction level</a> so light wear doesn't break the scan.</li>
+  </ul>
+
+  <h2>Keep reading</h2>
+  <ul>
+    <li><a href="/articles/qr-code-design-tips-that-still-scan.html">QR code design tips that still scan</a></li>
+    <li><a href="/articles/how-qr-codes-work.html">How QR codes actually work</a></li>
+    <li><a href="/wifi-qr-code/">Mint a Wi&#8209;Fi QR code</a></li>
+  </ul>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

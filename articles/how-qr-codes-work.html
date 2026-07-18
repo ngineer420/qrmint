@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How QR Codes Actually Work — QR Mint</title>
+<meta name="description" content="Modules, finder patterns, encoding modes, and Reed–Solomon error correction — the anatomy of a QR code, explained from the pixel up.">
+<link rel="canonical" href="https://qrmint.net/articles/how-qr-codes-work.html">
+<meta name="theme-color" content="#071913">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+  </div>
+</header>
+<main class="container-narrow">
+  <h1>How QR Codes Actually Work</h1>
+
+  <p>A QR code looks like static, but every square in that grid is doing a specific job. Denso Wave invented the format in 1994 for tracking car parts on Toyota's factory floor, and it was designed from the start to be readable fast, from any angle, even partially damaged. That last requirement is why a QR code is so much more than a black-and-white barcode stretched into two dimensions — it's a small, self-describing data structure with its own error correction built in.</p>
+
+  <h2>The building block: a module</h2>
+  <p>Each individual black or white square in a QR code is called a <strong>module</strong>, not a pixel — "pixel" describes a unit of a screen, while "module" describes a unit of the code's own grid, which stays the same regardless of how large or small the code is rendered. A QR code is always square, and its side length in modules follows a fixed formula based on its <strong>version</strong>, a number from 1 to 40: version 1 is 21×21 modules, and each version up adds 4 modules per side, topping out at version 40's 177×177 grid. QR Mint picks the smallest version that fits your content automatically — more data, or a higher error-correction level, pushes the version (and the module count) up.</p>
+
+  <h2>The three eyes: finder patterns</h2>
+  <p>The three bold square-in-square-in-square markers in the top-left, top-right, and bottom-left corners are <strong>finder patterns</strong>. They're identical and deliberately unambiguous at any rotation, which is how a scanner locates and orients a QR code before it even starts reading data — find those three squares, and you know which way is up, how large the grid is, and roughly how skewed the camera's angle is. Larger QR codes also get smaller <strong>alignment patterns</strong> scattered through the interior, which correct for the lens distortion that shows up over a bigger grid, and thin <strong>timing patterns</strong> — alternating black-and-white strips connecting the finder patterns — that let the scanner count modules accurately even if the image is a little blurry.</p>
+
+  <h2>Turning your content into bits</h2>
+  <p>Once the frame is built, the actual content gets encoded using one of several <strong>modes</strong>, chosen automatically based on what characters are present: <em>numeric mode</em> packs digits three at a time into 10 bits, the most efficient option for something like a phone number; <em>alphanumeric mode</em> handles uppercase letters, digits, and a small set of symbols at roughly 5.5 bits per character; and <em>byte mode</em> — used for anything else, including lowercase letters, punctuation, and full Unicode text — spends a full 8 bits per byte. A short numeric string and an equally long byte-mode string won't produce the same size code, which is part of why a phone number QR code can look noticeably simpler than a paragraph of text at the same error-correction level.</p>
+
+  <h2>Error correction: the part that makes QR codes reliable</h2>
+  <p>This is the feature that separates a QR code from an ordinary barcode. Before the data is laid into the grid, a mathematical technique called <strong>Reed–Solomon error correction</strong> generates extra "parity" codewords derived from the original data and interleaves them alongside it. A scanner doesn't need every module to be read correctly — it can reconstruct the original content even if a meaningful chunk of the code is smudged, torn, glared-out, or deliberately covered by a logo, as long as the damage stays within the code's chosen tolerance. QR Mint lets you pick that tolerance directly via the <strong>error-correction level</strong> (L, M, Q, or H) — see our <a href="/articles/qr-code-error-correction-levels-explained.html">full breakdown of what each level actually means</a> for the size tradeoff involved.</p>
+
+  <h2>Masking: making the pattern scanner-friendly</h2>
+  <p>Raw encoded data doesn't always produce a grid that's easy to scan — long runs of the same color, or patterns that accidentally resemble a finder pattern, can confuse a scanner's edge detection. Before finalizing a code, the encoder tries all eight standardized <strong>mask patterns</strong> (each one XORs the data against a different repeating geometric rule) and scores the result on things like run-length and pattern balance, then keeps whichever mask produces the most scanner-friendly grid. This step is invisible to you as a user, but it's why two QR codes encoding similar content can look visually quite different — they may simply have picked different masks.</p>
+
+  <h2>The last two pieces: format and version info</h2>
+  <p>Two small strips of modules next to the finder patterns encode the <strong>error-correction level</strong> and <strong>mask pattern</strong> used, protected by their own short error-correcting code — this is how a scanner knows how to undo the masking and interpret the rest of the grid correctly. Codes at version 7 and above (45×45 modules or larger) also carry a small <strong>version information</strong> block, since at that size the module count alone is ambiguous. All of this — finder patterns, timing, alignment, format info, version info, masking, and Reed–Solomon error correction — is what QR Mint's built-in encoder assembles the moment you type into the generator, entirely on your device.</p>
+
+  <h2>Keep reading</h2>
+  <ul>
+    <li><a href="/articles/qr-code-error-correction-levels-explained.html">Error correction levels explained: L, M, Q, H</a></li>
+    <li><a href="/articles/qr-code-design-tips-that-still-scan.html">QR code design tips that still scan</a></li>
+    <li><a href="/articles/how-to-share-wifi-with-a-qr-code.html">How to share Wi&#8209;Fi with a QR code</a></li>
+    <li><a href="/">Mint a QR code</a></li>
+  </ul>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

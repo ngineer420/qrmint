@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vCard QR Code Generator — Digital Business Card | QR Mint</title>
+<meta name="description" content="Turn your name, phone, email and company into a scannable contact-card QR code. Scan once and it's saved straight to the address book. Free and 100% client-side.">
+<link rel="canonical" href="https://qrmint.net/vcard-qr-code/">
+<meta name="theme-color" content="#071913">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="vCard QR Code Generator — Digital Business Card">
+<meta property="og:description" content="Turn your name, phone, email and company into a scannable contact-card QR code. Scan once and it's saved straight to the address book.">
+<meta property="og:url" content="https://qrmint.net/vcard-qr-code/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="vCard QR Code Generator — Digital Business Card">
+<meta name="twitter:description" content="Turn your name, phone, email and company into a scannable contact-card QR code.">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "vCard QR Code Generator — QR Mint",
+  "url": "https://qrmint.net/vcard-qr-code/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based vCard QR code generator. Encodes a contact card — name, phone, email, organization — into a scannable code."
+}
+</script>
+
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>vCard <span class="mint-of">QR code</span> generator</h1>
+      <p class="lede">Fill in a name, number, email and company once. Scan it and the full contact lands straight in the address book — no manual typing, no missed digit.</p>
+      <p class="trust-line">100% client-side<span class="dot">•</span>details never leave your browser<span class="dot">•</span>free</p>
+    </div>
+  </div>
+
+  <nav role="tablist" class="tabbar" aria-label="QR code type">
+    <a role="tab" href="/" class="tab-btn">Link</a>
+    <a role="tab" href="/wifi-qr-code/" class="tab-btn">Wi&#8209;Fi</a>
+    <a role="tab" href="/vcard-qr-code/" class="tab-btn is-active" aria-current="page">Contact card</a>
+    <a role="tab" href="/" class="tab-btn">Text</a>
+  </nav>
+
+  <div class="generator-grid">
+    <div>
+      <section id="panel-vcard" class="tab-panel active">
+        <div class="panel">
+          <h2>Contact card</h2>
+          <div class="field-grid cols-2">
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-first">First name</label>
+              <input type="text" id="vc-first" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-last">Last name</label>
+              <input type="text" id="vc-last" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-phone">Phone</label>
+              <input type="tel" id="vc-phone" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-email">Email</label>
+              <input type="email" id="vc-email" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-org">Organization</label>
+              <input type="text" id="vc-org" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-title">Job title</label>
+              <input type="text" id="vc-title" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-url">Website</label>
+              <input type="text" id="vc-url" placeholder="example.com" autocomplete="off">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="vc-address">Address</label>
+              <input type="text" id="vc-address" placeholder="123 Main St, City" autocomplete="off">
+            </div>
+          </div>
+          <p class="field-hint" style="margin-top:14px;">Scanning this saves a real contact card — name, number, email and all — straight to the phone's address book.</p>
+        </div>
+      </section>
+
+      <div class="panel" style="margin-top:16px;">
+        <h2>Options</h2>
+        <div class="options-grid">
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-size">Size</label>
+            <select id="opt-size">
+              <option value="256">Small (256px)</option>
+              <option value="512" selected>Medium (512px)</option>
+              <option value="768">Large (768px)</option>
+              <option value="1024">X-Large (1024px)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-ecl">Error correction</label>
+            <select id="opt-ecl">
+              <option value="L">L — ~7%</option>
+              <option value="M" selected>M — ~15%</option>
+              <option value="Q">Q — ~25%</option>
+              <option value="H">H — ~30%</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="opt-margin">Margin</label>
+            <select id="opt-margin">
+              <option value="2">Tight</option>
+              <option value="4" selected>Standard</option>
+              <option value="6">Wide</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Colors</label>
+            <div class="color-field">
+              <input type="color" id="opt-fg" value="#0b2119" aria-label="Foreground color">
+              <input type="color" id="opt-bg" value="#ffffff" aria-label="Background color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="qr-stage-wrap">
+        <div class="qr-ring" aria-hidden="true"></div>
+        <div class="qr-stage" id="qr-stage">
+          <div class="qr-stage-inner">
+            <canvas id="qr-canvas" width="220" height="220" role="img" aria-label="Generated contact card QR code preview"></canvas>
+          </div>
+          <div class="mint-badge" id="mint-badge" aria-hidden="true">MINTED<br>✓</div>
+        </div>
+        <p class="field-hint" id="qr-empty">Enter at least a name or organization to mint your contact card.</p>
+        <div class="qr-meta" id="qr-meta"></div>
+        <p class="qr-warning" id="qr-warning" hidden></p>
+        <div class="qr-actions">
+          <button type="button" class="primary" id="qr-download-png" disabled>Mint PNG</button>
+          <button type="button" class="primary" id="qr-download-svg" disabled>Mint SVG</button>
+          <div class="copy-flash-wrap">
+            <button type="button" class="icon-btn" id="qr-copy-payload" disabled>Copy data</button>
+            <span class="copy-flash" id="qr-copy-flash">Copied!</span>
+          </div>
+        </div>
+        <div class="payload-preview" id="qr-payload-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="container-narrow explainer">
+    <h2>About the vCard QR code format</h2>
+    <p>This tool builds a standard <strong>vCard 3.0</strong> record — the same contact-card format used by Contacts apps, email clients and CRMs — and encodes it directly into the QR code. When someone scans it, their phone recognizes the vCard data and offers to add it as a new contact immediately, with every field filled in correctly.</p>
+    <h2>What should I include?</h2>
+    <p>A name plus one way to reach you (phone or email) covers most uses. Add organization and title for a business-card replacement, and a website if you want a scan to double as a portfolio link. Leave anything blank you'd rather not share — the QR code only encodes the fields you fill in.</p>
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Will this work as a digital business card?</h3>
+      <p>Yes — print it on a card, badge, or slide, or just show it on a screen. Anyone with a phone camera can scan and save your details in one tap.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does it support multiple phone numbers or emails?</h3>
+      <p>This generator keeps it to one of each for a clean, reliably-scannable code. For multiple contact methods, list a primary number and add the rest in a linked website or text QR code instead.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is my contact information stored anywhere?</h3>
+      <p>No — the vCard is built and encoded entirely in your browser. QR Mint never sees or stores what you type.</p>
+    </div>
+  </section>
+
+  <nav class="container-narrow" aria-label="Other QR code types" style="padding-top:0;">
+    <h2 style="margin-top:0;">More QR code types</h2>
+    <ul>
+      <li><a href="/wifi-qr-code/">Wi&#8209;Fi QR Code Generator</a> — share network access instantly.</li>
+      <li><a href="/">Link &amp; text QR codes</a> — the full generator with all four modes.</li>
+    </ul>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+
+<script src="/assets/js/qrcodegen.js"></script>
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

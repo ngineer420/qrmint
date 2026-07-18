@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Error Correction Levels Explained: L, M, Q, H — QR Mint</title>
+<meta name="description" content="What each QR code error-correction level actually tolerates, how much bigger the code gets, and how to pick the right one for print vs. screen.">
+<link rel="canonical" href="https://qrmint.net/articles/qr-code-error-correction-levels-explained.html">
+<meta name="theme-color" content="#071913">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+  </div>
+</header>
+<main class="container-narrow">
+  <h1>QR Code Error Correction Levels Explained: L, M, Q, H</h1>
+
+  <p>Every QR code carries its own repair data, which is why a code can still scan even after part of it is torn, smudged, glared-out, or covered by a logo. How much damage it can survive is a choice you make up front — QR Mint calls it "Error correction" in the options panel, with four levels: <strong>L, M, Q, and H</strong>. Picking the right one is a real tradeoff, not a "more is always better" setting, so here's what each level actually buys you.</p>
+
+  <h2>The four levels, in plain terms</h2>
+  <ul>
+    <li><strong>L (Low) — recovers from about 7% damage.</strong> Produces the smallest, least dense code for a given amount of content. Good for anything shown on a clean screen, where there's no risk of physical damage, glare, or a logo overlay.</li>
+    <li><strong>M (Medium) — recovers from about 15% damage.</strong> QR Mint's default. A sensible middle ground for most everyday uses — printed flyers, packaging, presentation slides — without inflating the code more than necessary.</li>
+    <li><strong>Q (Quartile) — recovers from about 25% damage.</strong> Worth using for anything that'll be printed small, laminated, handled a lot, or exposed to weather and wear, like a sticker on equipment or a menu that gets wiped down daily.</li>
+    <li><strong>H (High) — recovers from about 30% damage.</strong> The level to reach for if you're placing a logo or icon over part of the code, since that overlay is effectively "damage" the decoder needs to correct around, or if the print quality is genuinely uncertain.</li>
+  </ul>
+
+  <h2>Why not just always use the highest level?</h2>
+  <p>Because error correction isn't free — it's extra data appended alongside your actual content, and QR codes have a fixed set of sizes (versions) to hold everything. Going from L to H roughly quadruples the amount of built-in redundancy, which pushes the encoder toward a larger version with more modules for the exact same content. A denser code means smaller individual modules at a given print size, and smaller modules are themselves harder for a camera to resolve cleanly, especially from a distance or on a cheap printer. In other words, cranking error correction all the way up to defend against damage can, past a point, make the code more fragile in a different way — by making each module tinier and more easily blurred together. The right level depends on the real risk your code faces, not the theoretical maximum.</p>
+
+  <h2>A quick way to decide</h2>
+  <p>Ask two questions: <em>where will this code live</em>, and <em>will anything ever sit on top of it</em>? A code that only ever appears on a screen — a slide, a website, a digital menu — has essentially zero physical risk, so L or M keeps it as simple (and fast to scan) as possible. A code headed for print, especially something small like a business card or a product label, benefits from M or Q simply because ink, paper texture, and handling introduce real-world imperfections a screen never sees. And any code with a logo, icon, or decorative element placed over the middle of it needs H — without enough error correction, that overlay is exactly the kind of "damage" the code can't recover from.</p>
+
+  <h2>Seeing the size difference yourself</h2>
+  <p>The clearest way to understand the tradeoff is to watch it happen: type the same content into <a href="/">QR Mint's generator</a> and switch the error-correction level from L to H. The "modules" figure in the QR code's metadata line jumps as the level rises, and at a fixed pixel size, you'll see the individual squares visibly shrink. For short content like a URL the difference is often invisible in practice; for something longer, like a full vCard contact card, it becomes obvious fast — which is one more reason to keep contact-card and text QR codes reasonably concise.</p>
+
+  <h2>Keep reading</h2>
+  <ul>
+    <li><a href="/articles/how-qr-codes-work.html">How QR codes actually work</a></li>
+    <li><a href="/articles/qr-code-design-tips-that-still-scan.html">QR code design tips that still scan</a></li>
+    <li><a href="/articles/how-to-share-wifi-with-a-qr-code.html">How to share Wi&#8209;Fi with a QR code</a></li>
+    <li><a href="/">Mint a QR code</a></li>
+  </ul>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
