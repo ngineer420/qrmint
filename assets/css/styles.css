@@ -462,7 +462,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
 .footer-links a { color: var(--text-dim); }
 
 /* ---------- erabbit mark ---------- */
-.erabbit-mark { display: block; width: 10px; margin: 0 0 0 auto; line-height: 0; }
+.erabbit-mark { display: block; width: 10px; margin: 0 0 0 auto; line-height: 0; cursor: default; }
 .erabbit-mark img { display: block; width: 10px; height: 10px; }
 
 /* ---------- misc ---------- */
