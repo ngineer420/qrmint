@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Reader — Scan a QR Code from an Image or Camera | QR Mint</title>
+<meta name="description" content="Read any QR code: drop in a photo or screenshot, or point your camera at one. Wi-Fi logins and contact cards are broken out field by field. Free, and decoded entirely in your browser.">
+<link rel="canonical" href="https://qrmint.net/scan-qr-code/">
+<meta name="theme-color" content="#071913">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="QR Code Reader — Scan a QR Code from an Image or Camera">
+<meta property="og:description" content="Decode a QR code from a photo, a pasted screenshot, or your camera. Wi-Fi, vCard and link payloads parsed into fields. 100% client-side.">
+<meta property="og:url" content="https://qrmint.net/scan-qr-code/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QR Code Reader — Scan a QR Code from an Image or Camera">
+<meta name="twitter:description" content="Decode a QR code from a photo, a pasted screenshot, or your camera. Nothing is uploaded.">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "QR Code Reader — QR Mint",
+  "url": "https://qrmint.net/scan-qr-code/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based QR code reader. Decodes a QR code from an uploaded image, a pasted screenshot or a live camera feed, and parses Wi-Fi, vCard, link and calendar payloads into readable fields. Runs entirely client-side."
+}
+</script>
+
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Read a <span class="mint-of">QR code</span> in your browser</h1>
+      <p class="lede">Drop in a photo, paste a screenshot, or point your camera at a code. QR Mint decodes it here and tells you what it actually contains — before you act on it.</p>
+      <p class="trust-line">100% client-side<span class="dot">•</span>your camera feed never leaves the browser<span class="dot">•</span>free</p>
+    </div>
+  </div>
+
+  <nav role="tablist" class="tabbar" aria-label="QR code type">
+    <a role="tab" href="/" class="tab-btn">Link</a>
+    <a role="tab" href="/wifi-qr-code/" class="tab-btn">Wi&#8209;Fi</a>
+    <a role="tab" href="/vcard-qr-code/" class="tab-btn">Contact card</a>
+    <a role="tab" href="/" class="tab-btn">Text</a>
+    <a role="tab" href="/scan-qr-code/" class="tab-btn is-active" aria-current="page">Scan a code</a>
+    <a role="tab" href="/bulk-qr-codes/" class="tab-btn">Batch from CSV</a>
+  </nav>
+
+  <div class="tool-grid" id="decode-tool">
+    <div>
+      <div class="panel">
+        <h2>Scan from an image</h2>
+        <div class="drop-zone" id="decode-drop">
+          <p>Drop a photo or screenshot of a QR code here</p>
+          <button type="button" class="primary" id="decode-pick">Choose an image</button>
+          <input type="file" id="decode-file" accept="image/*" hidden>
+          <p class="field-hint">…or press <kbd>Ctrl</kbd>+<kbd>V</kbd> / <kbd>⌘</kbd>+<kbd>V</kbd> to paste one straight from your clipboard.</p>
+        </div>
+        <img id="decode-preview" alt="The image being decoded" hidden>
+      </div>
+
+      <div class="panel">
+        <h2>Scan with your camera</h2>
+        <div class="camera-actions">
+          <button type="button" class="primary" id="decode-camera-btn">Start camera</button>
+          <button type="button" class="icon-btn" id="decode-camera-stop" hidden>Stop camera</button>
+        </div>
+        <div class="decode-video-wrap" id="decode-video-wrap" hidden>
+          <video id="decode-video" playsinline muted></video>
+        </div>
+        <p class="field-hint">Frames are read inside this tab and immediately discarded. Your camera feed never leaves the browser — QR Mint has no server that could receive it.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2>Decoded</h2>
+        <p class="decode-status" id="decode-status" hidden></p>
+        <p class="field-hint" id="decode-idle">Drop an image or start the camera. Whatever the code carries shows up here — with Wi&#8209;Fi logins, contact cards and links broken out field by field.</p>
+        <div id="decode-result" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="container-narrow explainer">
+    <h2>Why decode a QR code before you scan it with your phone</h2>
+    <p>A QR code is unreadable to a human by design, which is exactly what makes a printed sticker over a real one such an effective trick — parking meters, restaurant tables and delivery notices have all been targeted. Reading the code here first shows you the <strong>actual destination</strong> as plain text, so you can check the domain before anything opens. QR Mint never follows a link on its own: it shows you the address and waits.</p>
+    <h2>What QR Mint can pull apart</h2>
+    <p>Most QR codes hold more than a link, and the payload format tells you which. QR Mint recognises and breaks out:</p>
+    <ul>
+      <li><strong>Website links</strong> — with the host shown separately, so a lookalike domain is easier to spot</li>
+      <li><strong>Wi&#8209;Fi logins</strong> (<code>WIFI:</code>) — network name, password and security type</li>
+      <li><strong>Contact cards</strong> (<code>BEGIN:VCARD</code> and <code>MECARD:</code>) — name, phone, email, organisation, address</li>
+      <li><strong>Email, phone, SMS and geo links</strong> — <code>mailto:</code>, <code>tel:</code>, <code>SMSTO:</code>, <code>geo:</code></li>
+      <li><strong>Calendar events</strong> (<code>BEGIN:VEVENT</code>) — summary, location and times</li>
+      <li><strong>Two-factor setup codes</strong> (<code>otpauth://</code>) — flagged loudly, because anyone who reads one owns that second factor</li>
+      <li><strong>Plain text</strong> — shown exactly as encoded, including line breaks</li>
+    </ul>
+    <h2>How the decoding works</h2>
+    <p>Your image is drawn onto a canvas in this tab, and the raw pixels are handed to a QR decoder compiled to JavaScript. It finds the three big finder squares, works out the perspective the photo was taken at, samples the grid of modules, and runs Reed–Solomon error correction to recover the bytes — the same steps a phone camera performs, just running on your machine instead of someone's server. There is no upload step, because there is nothing to upload to.</p>
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Is my image or camera feed uploaded anywhere?</h3>
+      <p>No. QR Mint is a static site with no backend. The image you drop is read by your own browser, and camera frames are examined one at a time and discarded immediately — nothing is recorded, stored or transmitted.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Why won't my photo decode?</h3>
+      <p>The most common causes are blur, a code cropped so tightly that its quiet border is missing, heavy glare, or a code photographed at a steep angle. Try again with the whole code plus a little white space around it, in focus. QR Mint automatically retries at several scales and also tries inverted (light-on-dark) codes before giving up.</p>
+    </div>
+    <div class="faq-item">
+      <h3>The camera button does nothing.</h3>
+      <p>Browsers only allow camera access on a secure connection, and only after you grant permission. If you dismissed or blocked the prompt, re-enable the camera for this site from the icon in your address bar. If the device has no camera, or another app is holding it, QR Mint says so and the image upload still works.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can it read a damaged or partly covered code?</h3>
+      <p>Often, yes. QR codes carry Reed–Solomon repair data, so a code minted at error-correction level Q or H can lose roughly a quarter to a third of itself and still decode. A code at level L has far less slack.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can it read barcodes or Data Matrix codes?</h3>
+      <p>No — this reader handles QR codes only, including micro-sized and inverted ones. One-dimensional retail barcodes and Data Matrix are different symbologies entirely.</p>
+    </div>
+  </section>
+
+  <nav class="container-narrow" aria-label="Other QR code tools" style="padding-top:0;">
+    <h2 style="margin-top:0;">More QR code tools</h2>
+    <ul>
+      <li><a href="/">QR code generator</a> — mint a code for a link, Wi&#8209;Fi network, contact or note.</li>
+      <li><a href="/bulk-qr-codes/">Bulk QR codes from a CSV</a> — one code per row, downloaded as a ZIP.</li>
+      <li><a href="/articles/how-qr-codes-work.html">How QR codes actually work</a> — what the decoder above is looking at.</li>
+    </ul>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+
+<!-- No qrcodegen.js here: this page only reads codes, it never writes one.
+     jsqr.js is fetched by decode.js on first use rather than up front. -->
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/decode.js"></script>
+</body>
+</html>
