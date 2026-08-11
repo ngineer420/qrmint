@@ -200,13 +200,21 @@
   // whether its tabbar links carry ids — so detect the mode from the panel
   // itself, not from the tabbar. The homepage has all four panels and gets
   // full tabbed switching.
-  const modeOf = { "tab-url": "url", "tab-wifi": "wifi", "tab-vcard": "vcard", "tab-text": "text" };
+  const modeOf = {
+    "tab-url": "url", "tab-wifi": "wifi", "tab-vcard": "vcard", "tab-text": "text",
+    "tab-decode": "decode", "tab-batch": "batch",
+  };
   const panelIdToMode = { "panel-url": "url", "panel-wifi": "wifi", "panel-vcard": "vcard", "panel-text": "text" };
   const presentModePanels = Object.keys(panelIdToMode).filter((id) => document.getElementById(id));
   if (presentModePanels.length === 1) currentMode = panelIdToMode[presentModePanels[0]];
 
+  // The reader and the CSV batch tool are whole tools rather than another
+  // payload type, so they replace the generator's two-column stage instead of
+  // feeding it.
+  const GENERATOR_MODES = { url: true, wifi: true, vcard: true, text: true };
+
   (function initTabs() {
-    const tabIds = ["tab-url", "tab-wifi", "tab-vcard", "tab-text"];
+    const tabIds = ["tab-url", "tab-wifi", "tab-vcard", "tab-text", "tab-decode", "tab-batch"];
     const tabs = tabIds.map((id) => document.getElementById(id)).filter(Boolean);
     const panels = {};
     tabs.forEach((t) => {
@@ -229,9 +237,14 @@
         panels[t.id].classList.toggle("active", active);
       });
       currentMode = modeOf[tab.id];
+      const isGenerator = !!GENERATOR_MODES[currentMode];
+      const grid = document.getElementById("generator-grid");
+      if (grid) grid.hidden = !isGenerator;
+      // Leaving the reader must switch the camera light off, not just hide it.
+      if (currentMode !== "decode" && typeof window.qrmintStopCamera === "function") window.qrmintStopCamera();
       if (push) history.pushState({ tool: tab.id }, "", tab.getAttribute("href"));
       if (focus) tab.focus();
-      scheduleUpdate();
+      if (isGenerator) scheduleUpdate();
     }
 
     tabs.forEach((tab, i) => {

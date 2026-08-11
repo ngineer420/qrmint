@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)</title>
-<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — free, instant, and 100% in your browser. Download as PNG or SVG. Nothing is ever uploaded.">
+<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — or scan one back from an image or your camera. Batch-generate from a CSV. Free, instant, and 100% in your browser.">
 <link rel="canonical" href="https://qrmint.net/">
 <meta name="theme-color" content="#071913">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
-<meta property="og:description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — free, instant, and 100% in your browser. Download as PNG or SVG.">
+<meta property="og:description" content="Generate QR codes for links, Wi-Fi, contacts and text — scan them back from an image or camera, and batch-generate from a CSV. 100% in your browser.">
 <meta property="og:url" content="https://qrmint.net/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
-<meta name="twitter:description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — free, instant, and 100% in your browser.">
+<meta name="twitter:description" content="Generate QR codes for links, Wi-Fi, contacts and text — scan them back, and batch-generate from a CSV. 100% in your browser.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/css/styles.css">
@@ -28,7 +28,13 @@
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Free browser-based QR code generator for URLs, Wi-Fi networks, vCard contact cards and plain text, with PNG and SVG download. Runs entirely client-side."
+  "description": "Free browser-based QR code generator and reader for URLs, Wi-Fi networks, vCard contact cards and plain text, with PNG and SVG download, image and camera scanning, and batch generation from a CSV. Runs entirely client-side.",
+  "featureList": [
+    "Generate QR codes for links, Wi-Fi, contact cards and text",
+    "Scan and decode QR codes from an image or a live camera",
+    "Batch-generate QR codes from a CSV and download them as a ZIP",
+    "Download as PNG or SVG"
+  ]
 }
 </script>
 
@@ -126,9 +132,11 @@
     <a role="tab" id="tab-wifi" href="/wifi-qr-code/" aria-controls="panel-wifi" aria-selected="false" class="tab-btn" tabindex="-1">Wi&#8209;Fi</a>
     <a role="tab" id="tab-vcard" href="/vcard-qr-code/" aria-controls="panel-vcard" aria-selected="false" class="tab-btn" tabindex="-1">Contact card</a>
     <a role="tab" id="tab-text" href="/" aria-controls="panel-text" aria-selected="false" class="tab-btn" tabindex="-1">Text</a>
+    <a role="tab" id="tab-decode" href="/scan-qr-code/" aria-controls="panel-decode" aria-selected="false" class="tab-btn" tabindex="-1">Scan a code</a>
+    <a role="tab" id="tab-batch" href="/bulk-qr-codes/" aria-controls="panel-batch" aria-selected="false" class="tab-btn" tabindex="-1">Batch from CSV</a>
   </nav>
 
-  <div class="generator-grid">
+  <div class="generator-grid" id="generator-grid">
     <div>
       <!-- ===================== LINK / URL ===================== -->
       <section role="tabpanel" id="panel-url" aria-labelledby="tab-url" class="tab-panel active">
@@ -293,6 +301,154 @@
     </div>
   </div>
 
+  <!-- ===================== SCAN / DECODE ===================== -->
+  <section role="tabpanel" id="panel-decode" aria-labelledby="tab-decode" class="tab-panel" hidden>
+    <div class="tool-grid" id="decode-tool">
+      <div>
+        <div class="panel">
+          <h2>Scan from an image</h2>
+          <div class="drop-zone" id="decode-drop">
+            <p>Drop a photo or screenshot of a QR code here</p>
+            <button type="button" class="primary" id="decode-pick">Choose an image</button>
+            <input type="file" id="decode-file" accept="image/*" hidden>
+            <p class="field-hint">…or press <kbd>Ctrl</kbd>+<kbd>V</kbd> / <kbd>⌘</kbd>+<kbd>V</kbd> to paste one straight from your clipboard.</p>
+          </div>
+          <img id="decode-preview" alt="The image being decoded" hidden>
+        </div>
+
+        <div class="panel">
+          <h2>Scan with your camera</h2>
+          <div class="camera-actions">
+            <button type="button" class="primary" id="decode-camera-btn">Start camera</button>
+            <button type="button" class="icon-btn" id="decode-camera-stop" hidden>Stop camera</button>
+          </div>
+          <div class="decode-video-wrap" id="decode-video-wrap" hidden>
+            <video id="decode-video" playsinline muted></video>
+          </div>
+          <p class="field-hint">Frames are read inside this tab and immediately discarded. Your camera feed never leaves the browser — QR Mint has no server that could receive it.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h2>Decoded</h2>
+          <p class="decode-status" id="decode-status" hidden></p>
+          <p class="field-hint" id="decode-idle">Drop an image or start the camera. Whatever the code carries shows up here — with Wi&#8209;Fi logins, contact cards and links broken out field by field.</p>
+          <div id="decode-result" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BATCH FROM CSV ===================== -->
+  <section role="tabpanel" id="panel-batch" aria-labelledby="tab-batch" class="tab-panel" hidden>
+    <div class="tool-grid" id="batch-tool">
+      <div>
+        <div class="panel">
+          <h2>Your CSV</h2>
+          <div class="drop-zone" id="batch-drop">
+            <p>Drop a .csv file here</p>
+            <button type="button" class="primary" id="batch-pick">Choose a file</button>
+            <input type="file" id="batch-file" accept=".csv,text/csv,text/plain" hidden>
+          </div>
+          <div class="field" style="margin-top:14px;">
+            <label for="batch-csv">…or paste the rows</label>
+            <textarea id="batch-csv" rows="8" spellcheck="false" placeholder="name,url&#10;Table 1,https://example.com/menu&#10;Table 2,https://example.com/menu?t=2"></textarea>
+          </div>
+          <button type="button" class="icon-btn" id="batch-sample">Load a sample CSV</button>
+        </div>
+
+        <div class="panel">
+          <h2>Columns</h2>
+          <div class="two-col">
+            <div class="field" style="margin-bottom:0;">
+              <label for="batch-delimiter">Delimiter</label>
+              <select id="batch-delimiter">
+                <option value="auto" selected>Detect automatically</option>
+                <option value="comma">Comma ,</option>
+                <option value="semicolon">Semicolon ;</option>
+                <option value="tab">Tab</option>
+                <option value="pipe">Pipe |</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="batch-format">File format</label>
+              <select id="batch-format">
+                <option value="png" selected>PNG</option>
+                <option value="svg">SVG (vector)</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="batch-data-col">Column to encode</label>
+              <select id="batch-data-col"></select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="batch-name-col">Column for filenames</label>
+              <select id="batch-name-col">
+                <option value="-1">Number them (qr-001, qr-002…)</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkbox-row" style="margin-top:14px;">
+            <input type="checkbox" id="batch-header" checked>
+            <label for="batch-header">First row is a header</label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Options</h2>
+          <div class="options-grid">
+            <div class="field" style="margin-bottom:0;">
+              <label for="bopt-size">Size</label>
+              <select id="bopt-size">
+                <option value="256">Small (256px)</option>
+                <option value="512" selected>Medium (512px)</option>
+                <option value="768">Large (768px)</option>
+                <option value="1024">X-Large (1024px)</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="bopt-ecl">Error correction</label>
+              <select id="bopt-ecl">
+                <option value="L">L — ~7%</option>
+                <option value="M" selected>M — ~15%</option>
+                <option value="Q">Q — ~25%</option>
+                <option value="H">H — ~30%</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="bopt-margin">Margin</label>
+              <select id="bopt-margin">
+                <option value="2">Tight</option>
+                <option value="4" selected>Standard</option>
+                <option value="6">Wide</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Colors</label>
+              <div class="color-field">
+                <input type="color" id="bopt-fg" value="#0b2119" aria-label="Foreground color">
+                <input type="color" id="bopt-bg" value="#ffffff" aria-label="Background color">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h2>Preview</h2>
+          <p class="batch-summary" id="batch-summary">Paste or drop a CSV and the codes show up here.</p>
+          <div class="qr-actions" style="justify-content:flex-start;">
+            <button type="button" class="primary" id="batch-download" disabled>Download ZIP</button>
+          </div>
+          <p class="batch-progress" id="batch-progress" hidden></p>
+          <div class="batch-preview" id="batch-preview"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="container-narrow explainer">
     <h2>How QR Mint works</h2>
     <p>QR Mint builds every code with a compact <strong>QR Code encoder that runs entirely inside your browser</strong> — the same Reed–Solomon error correction and masking logic used by professional QR libraries, just with no server round-trip. Type a link, Wi&#8209;Fi network, contact, or note; the preview updates live; hit <strong>Mint PNG</strong> or <strong>Mint SVG</strong> to download. Nothing you enter is ever sent anywhere — close the tab and it's gone.</p>
@@ -344,6 +500,14 @@
       <p>SVG is a vector file that stays crisp at any size — best for print, posters, and anything you might resize later. PNG is a fixed-size image — simplest for slides, docs, and the web.</p>
     </div>
     <div class="faq-item">
+      <h3>Can QR Mint read a code as well as make one?</h3>
+      <p>Yes — the <a href="/scan-qr-code/">QR code reader</a> decodes a code from a photo, a screenshot you paste, or your camera, and shows you what it actually contains before you act on it. Like everything else here, the image and the camera feed are processed in this tab and never uploaded.</p>
+    </div>
+    <div class="faq-item">
+      <h3>I need hundreds of codes. Do I have to make them one at a time?</h3>
+      <p>No. <a href="/bulk-qr-codes/">Batch from CSV</a> takes a spreadsheet export, mints one code per row, names each file from a column you choose, and hands the whole set back as a single ZIP.</p>
+    </div>
+    <div class="faq-item">
       <h3>Does anything I type get uploaded?</h3>
       <p>No. Every code is built and rendered locally, in your browser's own memory. QR Mint has no backend that ever sees your links, Wi&#8209;Fi password, or contact details.</p>
     </div>
@@ -356,6 +520,8 @@
     <div class="footer-links">
       <a href="/wifi-qr-code/">Wi&#8209;Fi QR Code</a>
       <a href="/vcard-qr-code/">vCard QR Code</a>
+      <a href="/scan-qr-code/">Scan a QR Code</a>
+      <a href="/bulk-qr-codes/">Bulk from CSV</a>
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </div>
@@ -365,6 +531,9 @@
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 
 <script src="/assets/js/qrcodegen.js"></script>
+<script src="/assets/js/zipwriter.js"></script>
 <script src="/assets/js/app.js"></script>
+<script src="/assets/js/decode.js"></script>
+<script src="/assets/js/batch.js"></script>
 </body>
 </html>

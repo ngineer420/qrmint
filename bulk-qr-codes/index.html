@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bulk QR Code Generator — One Code Per CSV Row, Downloaded as a ZIP | QR Mint</title>
+<meta name="description" content="Paste or drop a CSV and get one QR code per row, named from a column you choose and packed into a single ZIP. Free, unlimited, and generated entirely in your browser.">
+<link rel="canonical" href="https://qrmint.net/bulk-qr-codes/">
+<meta name="theme-color" content="#071913">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bulk QR Code Generator — One Code Per CSV Row">
+<meta property="og:description" content="Turn a CSV into a folder of QR codes: one per row, named from a column you pick, downloaded as a ZIP. 100% client-side.">
+<meta property="og:url" content="https://qrmint.net/bulk-qr-codes/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bulk QR Code Generator — One Code Per CSV Row">
+<meta name="twitter:description" content="Turn a CSV into a ZIP of QR codes, named from a column you pick. Nothing is uploaded.">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bulk QR Code Generator — QR Mint",
+  "url": "https://qrmint.net/bulk-qr-codes/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based bulk QR code generator. Reads a pasted or dropped CSV, mints one QR code per row as PNG or SVG, names each file from a chosen column, and packs the set into a ZIP. Runs entirely client-side."
+}
+</script>
+
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Mint <span class="mint-of">hundreds of QR codes</span> from one CSV</h1>
+      <p class="lede">One code per row, named from whichever column you choose, packed into a single ZIP. Export the spreadsheet, drop it here, download the folder.</p>
+      <p class="trust-line">100% client-side<span class="dot">•</span>up to 500 codes per run<span class="dot">•</span>free</p>
+    </div>
+  </div>
+
+  <nav role="tablist" class="tabbar" aria-label="QR code type">
+    <a role="tab" href="/" class="tab-btn">Link</a>
+    <a role="tab" href="/wifi-qr-code/" class="tab-btn">Wi&#8209;Fi</a>
+    <a role="tab" href="/vcard-qr-code/" class="tab-btn">Contact card</a>
+    <a role="tab" href="/" class="tab-btn">Text</a>
+    <a role="tab" href="/scan-qr-code/" class="tab-btn">Scan a code</a>
+    <a role="tab" href="/bulk-qr-codes/" class="tab-btn is-active" aria-current="page">Batch from CSV</a>
+  </nav>
+
+  <div class="tool-grid" id="batch-tool">
+    <div>
+      <div class="panel">
+        <h2>Your CSV</h2>
+        <div class="drop-zone" id="batch-drop">
+          <p>Drop a .csv file here</p>
+          <button type="button" class="primary" id="batch-pick">Choose a file</button>
+          <input type="file" id="batch-file" accept=".csv,text/csv,text/plain" hidden>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="batch-csv">…or paste the rows</label>
+          <textarea id="batch-csv" rows="8" spellcheck="false" placeholder="name,url&#10;Table 1,https://example.com/menu&#10;Table 2,https://example.com/menu?t=2"></textarea>
+        </div>
+        <button type="button" class="icon-btn" id="batch-sample">Load a sample CSV</button>
+      </div>
+
+      <div class="panel">
+        <h2>Columns</h2>
+        <div class="two-col">
+          <div class="field" style="margin-bottom:0;">
+            <label for="batch-delimiter">Delimiter</label>
+            <select id="batch-delimiter">
+              <option value="auto" selected>Detect automatically</option>
+              <option value="comma">Comma ,</option>
+              <option value="semicolon">Semicolon ;</option>
+              <option value="tab">Tab</option>
+              <option value="pipe">Pipe |</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="batch-format">File format</label>
+            <select id="batch-format">
+              <option value="png" selected>PNG</option>
+              <option value="svg">SVG (vector)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="batch-data-col">Column to encode</label>
+            <select id="batch-data-col"></select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="batch-name-col">Column for filenames</label>
+            <select id="batch-name-col">
+              <option value="-1">Number them (qr-001, qr-002…)</option>
+            </select>
+          </div>
+        </div>
+        <div class="checkbox-row" style="margin-top:14px;">
+          <input type="checkbox" id="batch-header" checked>
+          <label for="batch-header">First row is a header</label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Options</h2>
+        <div class="options-grid">
+          <div class="field" style="margin-bottom:0;">
+            <label for="bopt-size">Size</label>
+            <select id="bopt-size">
+              <option value="256">Small (256px)</option>
+              <option value="512" selected>Medium (512px)</option>
+              <option value="768">Large (768px)</option>
+              <option value="1024">X-Large (1024px)</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="bopt-ecl">Error correction</label>
+            <select id="bopt-ecl">
+              <option value="L">L — ~7%</option>
+              <option value="M" selected>M — ~15%</option>
+              <option value="Q">Q — ~25%</option>
+              <option value="H">H — ~30%</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="bopt-margin">Margin</label>
+            <select id="bopt-margin">
+              <option value="2">Tight</option>
+              <option value="4" selected>Standard</option>
+              <option value="6">Wide</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Colors</label>
+            <div class="color-field">
+              <input type="color" id="bopt-fg" value="#0b2119" aria-label="Foreground color">
+              <input type="color" id="bopt-bg" value="#ffffff" aria-label="Background color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h2>Preview</h2>
+        <p class="batch-summary" id="batch-summary">Paste or drop a CSV and the codes show up here.</p>
+        <div class="qr-actions" style="justify-content:flex-start;">
+          <button type="button" class="primary" id="batch-download" disabled>Download ZIP</button>
+        </div>
+        <p class="batch-progress" id="batch-progress" hidden></p>
+        <div class="batch-preview" id="batch-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="container-narrow explainer">
+    <h2>What the CSV needs to look like</h2>
+    <p>One row per code, and one column holding whatever each code should carry. Anything a single QR code can hold works per row — a URL, a <code>WIFI:</code> payload, a phone number, or plain text. A second column can name the files, so <code>Table 12</code> comes out as <code>Table-12.png</code> instead of <code>qr-012.png</code>. Export straight from Excel, Numbers, Google Sheets or a database dump; commas, semicolons, tabs and pipes are all detected automatically, and quoted fields containing the delimiter are handled properly.</p>
+    <pre class="payload-preview">name,url
+Table 1,https://example.com/menu
+Table 2,https://example.com/menu?t=2
+Front door,WIFI:T:WPA;S:Cafe Guest;P:flatwhite;;</pre>
+    <h2>Who this is for</h2>
+    <ul>
+      <li><strong>Events</strong> — one code per ticket or badge, named by attendee</li>
+      <li><strong>Restaurants and cafés</strong> — a per-table menu link that tells you which table ordered</li>
+      <li><strong>Retail and inventory</strong> — a code per SKU, shelf or asset tag</li>
+      <li><strong>Print runs</strong> — pick SVG and every code stays razor-sharp at any size</li>
+      <li><strong>Campaign links</strong> — a row per channel, each with its own tracking parameters</li>
+    </ul>
+    <h2>How the ZIP is built</h2>
+    <p>Each row is encoded into a QR code and drawn in your browser, then the whole set is packed into a ZIP archive by roughly a hundred lines of JavaScript on this page — no upload, no server, no third-party zip service. PNGs are stored rather than re-compressed inside the archive, because a PNG is already compressed and squeezing it again would save almost nothing.</p>
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Is there a row limit?</h3>
+      <p>500 rows per run, purely to keep your browser responsive — minting a few thousand codes at full resolution in one tab is a good way to freeze it. Split a larger file and run it twice.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does my spreadsheet get uploaded?</h3>
+      <p>No. The file is read by your browser's own file reader, parsed in this tab, and never sent anywhere. That matters more than it sounds for batch work, since these files tend to hold customer names, ticket numbers and internal URLs.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What happens to duplicate names?</h3>
+      <p>They get numbered — <code>ticket.png</code>, <code>ticket-2.png</code>, <code>ticket-3.png</code> — so nothing silently overwrites anything else. Accented characters are transliterated and anything a filesystem would object to is replaced, so the ZIP extracts cleanly everywhere.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if one row is too long to encode?</h3>
+      <p>That row is skipped and counted in the summary rather than failing the whole batch. A QR code tops out at a few thousand characters, and lower error-correction levels leave room for more.</p>
+    </div>
+    <div class="faq-item">
+      <h3>PNG or SVG?</h3>
+      <p>SVG for print — it stays sharp at any size and the files are tiny. PNG for slides, docs and the web, where a fixed-size image is simplest.</p>
+    </div>
+  </section>
+
+  <nav class="container-narrow" aria-label="Other QR code tools" style="padding-top:0;">
+    <h2 style="margin-top:0;">More QR code tools</h2>
+    <ul>
+      <li><a href="/">QR code generator</a> — mint a single code for a link, Wi&#8209;Fi network, contact or note.</li>
+      <li><a href="/scan-qr-code/">QR code reader</a> — check what a code contains before you scan it with a phone.</li>
+      <li><a href="/articles/qr-code-design-tips-that-still-scan.html">Design tips that still scan</a> — before you print a few hundred of them.</li>
+    </ul>
+  </nav>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+
+<script src="/assets/js/qrcodegen.js"></script>
+<script src="/assets/js/zipwriter.js"></script>
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/batch.js"></script>
+</body>
+</html>
