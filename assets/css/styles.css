@@ -337,11 +337,36 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
 .tb-sheet a[aria-current] {
   color: var(--tb-text); font-weight: 800; border-left-color: var(--tb-accent);
 }
+
+/* ---- site-local: keep the shared block's own colours in dark mode ----
+   This site paints links from a rule inside a prefers-color-scheme query that
+   is one selector heavier than the shared block's `.tb-rail a` / `.tb-sheet a`,
+   so in dark mode the non-current chips came out in the accent mint — brighter
+   than the current one, inverting the hierarchy the pattern relies on. Restated
+   here at matching weight rather than with !important, and kept outside the
+   shared block so that block stays byte-comparable with the rest of the
+   portfolio. */
+:root[data-theme="dark"] .tb-rail a,
+:root[data-theme="dark"] .tb-sheet a { color: var(--tb-text-dim); }
+:root[data-theme="dark"] .tb-rail a[aria-current],
+:root[data-theme="dark"] .tb-sheet a[aria-current] { color: var(--tb-text); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tb-rail a,
+  :root:not([data-theme="light"]) .tb-sheet a { color: var(--tb-text-dim); }
+  :root:not([data-theme="light"]) .tb-rail a[aria-current],
+  :root:not([data-theme="light"]) .tb-sheet a[aria-current] { color: var(--tb-text); }
+}
+
 /* <p>, not <h2>: chrome headings would pollute the outline of an SEO page. */
 .tb-grouplabel {
   margin: 0 0 4px; padding: 0 14px;
   font-size: 12px; font-weight: 800; letter-spacing: .08em;
   text-transform: uppercase; color: var(--tb-text-dim);
+  /* A group label and its list are two boxes, so `break-inside: avoid` on the
+     list does nothing to keep them together: the column balancer will happily
+     end a column on the heading and start the next one with the list it
+     introduces. */
+  break-after: avoid;
 }
 /* The one route from the chrome to a tier-2 family. */
 .tb-hub {
