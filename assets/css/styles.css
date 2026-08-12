@@ -260,6 +260,13 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
    multi-row header in the audit; nowrap makes those faults impossible. ---- */
 .tb-rail {
   flex: 1 1 auto; min-width: 0;
+  /* The centre-on-current JS reads `current.offsetLeft` and treats it as an
+     offset inside this scroller. Without a position here the nearest
+     positioned ancestor is `.toolbar`, so that figure also carries the
+     trigger's width and the rail over-scrolls by it — the current chip lands
+     with its first letters under the left fade, which is the clipped label
+     this pattern exists to prevent. Found on clocklab, fixed everywhere. */
+  position: relative;
   display: flex; flex-wrap: nowrap; gap: 0;
   margin: 0; padding: 0; list-style: none;
   overflow-x: auto; overflow-y: hidden;
