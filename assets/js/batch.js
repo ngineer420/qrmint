@@ -158,6 +158,13 @@
   const Ecc = QrCode && QrCode.Ecc;
   if (!QrCode) return;
 
+  // app.js owns the renderers and the logo geometry; the CSV tool draws through
+  // exactly the same code so a batch code and a hand-made one are identical.
+  const render = window.qrmintRender || {};
+  const drawQr = render.renderQrToCanvas;
+  const qrSvg = render.buildQrSvg;
+  if (!drawQr || !qrSvg) return;
+
   const textarea = document.getElementById("batch-csv");
   const fileInput = document.getElementById("batch-file");
   const dropZone = document.getElementById("batch-drop");
@@ -188,9 +195,29 @@
   const IDLE_SUMMARY = "Paste or drop a CSV and the codes show up here.";
   let state = { rows: [], items: [] };
 
+  const verifyEl = document.getElementById("batch-verify");
+  const logoPanel = window.qrmintCreateLogoPanel(
+    {
+      file: "blogo-file", pick: "blogo-pick", clear: "blogo-clear", name: "blogo-name",
+      thumb: "blogo-thumb", options: "blogo-options", size: "blogo-size",
+      sizeOut: "blogo-size-out", plate: "blogo-plate", pad: "blogo-pad", error: "blogo-error",
+    },
+    () => {
+      // The lock has to follow the logo even before a CSV arrives, or the level
+      // shown next to an empty preview is not the level the batch will use.
+      applyEccLock(!!logoPanel.get());
+      if (state.rows.length) renderPreview(detectDelimiter(textarea.value));
+    }
+  );
+  const applyEccLock = window.qrmintCreateEccLock(boptEcl, document.getElementById("bopt-ecl-note"));
+
+  function eccKey() {
+    const chosen = boptEcl ? boptEcl.value : "M";
+    return render.eccWithLogo(chosen, !!logoPanel.get());
+  }
+
   function eccValue() {
-    const v = boptEcl ? boptEcl.value : "M";
-    return { L: Ecc.LOW, M: Ecc.MEDIUM, Q: Ecc.QUARTILE, H: Ecc.HIGH }[v] || Ecc.MEDIUM;
+    return { L: Ecc.LOW, M: Ecc.MEDIUM, Q: Ecc.QUARTILE, H: Ecc.HIGH }[eccKey()] || Ecc.MEDIUM;
   }
 
   function currentOptions() {
@@ -199,40 +226,8 @@
       margin: boptMargin ? parseInt(boptMargin.value, 10) || 4 : 4,
       fg: (boptFg && boptFg.value) || "#0b2119",
       bg: (boptBg && boptBg.value) || "#ffffff",
+      logo: logoPanel.get(),
     };
-  }
-
-  function drawQr(qr, canvas, opts) {
-    const dim = qr.size + opts.margin * 2;
-    const scale = Math.max(1, Math.round(opts.targetPx / dim));
-    const px = dim * scale;
-    canvas.width = px;
-    canvas.height = px;
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = opts.bg;
-    ctx.fillRect(0, 0, px, px);
-    ctx.fillStyle = opts.fg;
-    for (let y = 0; y < qr.size; y++) {
-      for (let x = 0; x < qr.size; x++) {
-        if (qr.getModule(x, y)) ctx.fillRect((opts.margin + x) * scale, (opts.margin + y) * scale, scale, scale);
-      }
-    }
-    return px;
-  }
-
-  function qrSvg(qr, opts) {
-    const dim = qr.size + opts.margin * 2;
-    let path = "";
-    for (let y = 0; y < qr.size; y++) {
-      for (let x = 0; x < qr.size; x++) {
-        if (qr.getModule(x, y)) path += "M" + (x + opts.margin) + "," + (y + opts.margin) + "h1v1h-1z";
-      }
-    }
-    return (
-      '<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' +
-      dim + " " + dim + '" shape-rendering="crispEdges">\n<rect width="' + dim + '" height="' + dim +
-      '" fill="' + opts.bg + '"/>\n<path d="' + path + '" fill="' + opts.fg + '"/>\n</svg>\n'
-    );
   }
 
   function columnLabel(index, headerRow, hasHeader) {
@@ -294,6 +289,8 @@
       summaryEl.textContent = IDLE_SUMMARY;
       previewEl.innerHTML = "";
       downloadBtn.disabled = true;
+      verifyToken++;
+      if (verifyEl) verifyEl.hidden = true;
       return;
     }
     const delim = delimSelect.value === "auto" ? detectDelimiter(text) : { comma: ",", semicolon: ";", tab: "\t", pipe: "|" }[delimSelect.value];
@@ -304,6 +301,91 @@
 
   function delimiterName(delim) {
     return { ",": "comma", ";": "semicolon", "\t": "tab", "|": "pipe" }[delim] || delim;
+  }
+
+  /* --------------------------- scan verification ------------------------- */
+
+  // Every code in the preview grid gets read back, so a logo or a color choice
+  // that breaks the batch is caught before the ZIP lands — not after the run of
+  // 500 stickers comes back from the printer.
+  let verifyToken = 0;
+
+  function setVerdict(state_, label, detail) {
+    if (!verifyEl) return;
+    verifyEl.hidden = false;
+    verifyEl.className = "scan-verdict is-" + state_;
+    verifyEl.textContent = "";
+    const badge = document.createElement("span");
+    badge.className = "verdict-badge";
+    badge.textContent = label;
+    const text = document.createElement("span");
+    text.className = "verdict-detail";
+    text.textContent = detail;
+    verifyEl.append(badge, text);
+  }
+
+  async function verifyPreview() {
+    if (!verifyEl) return;
+    const cells = Array.prototype.slice.call(previewEl.querySelectorAll("canvas"))
+      .filter((c) => c.dataset.payload != null);
+    const token = ++verifyToken;
+    if (!cells.length) { verifyEl.hidden = true; return; }
+    setVerdict("checking", "Checking…", "Reading each previewed code back.");
+
+    let jsQR;
+    try {
+      jsQR = await window.qrmintEnsureDecoder();
+    } catch (err) {
+      if (token === verifyToken) setVerdict("warn", "Not verified", "The reader could not be loaded, so these codes were not scanned back.");
+      return;
+    }
+    if (token !== verifyToken) return;
+
+    const failures = [];
+    let inverted = 0;
+    for (let i = 0; i < cells.length; i++) {
+      const read = window.qrmintDecodeCanvas(jsQR, cells[i]);
+      if (token !== verifyToken) return;
+      if (read.blocked) {
+        setVerdict("warn", "Not verified", "That logo file blocks the browser from reading these codes back. Re-save it as a PNG for a verdict.");
+        return;
+      }
+      if (read.data !== cells[i].dataset.payload) failures.push(cells[i].dataset.name || "");
+      else if (read.inverted) inverted++;
+      if (i % 4 === 3) await new Promise((r) => setTimeout(r, 0)); // keep the tab live
+    }
+    if (token !== verifyToken) return;
+
+    const opts = currentOptions();
+    if (!failures.length && inverted) {
+      setVerdict("warn", "Inverted only", cells.length + " codes read back only when a scanner flips the colors — swap them so the modules are darker than the background.");
+      return;
+    }
+    if (!failures.length) {
+      setVerdict("ok", "Scan-verified", cells.length + " previewed " + (cells.length === 1 ? "code reads" : "codes read") + " back correctly with the same reader the scan tool uses.");
+      return;
+    }
+    const verdict = render.scanVerdict({
+      decoded: null,
+      expected: "x",
+      hasLogo: !!opts.logo,
+      logoPct: opts.logo && opts.logo.sizePct,
+      plate: opts.logo && opts.logo.plate,
+      ecl: eccKey(),
+      contrast: render.contrastRatio(opts.fg, opts.bg),
+      lightOnDark: render.isLightOnDark(opts.fg, opts.bg),
+    });
+    setVerdict("fail", failures.length + " won't scan", verdict.detail.replace(/^This code did not read back\./, failures.length + " of these " + cells.length + " codes did not read back."));
+  }
+
+  const scheduleVerify = debounce(verifyPreview, 300);
+
+  function debounce(fn, ms) {
+    let t;
+    return function () {
+      clearTimeout(t);
+      t = setTimeout(fn, ms);
+    };
   }
 
   function renderPreview(delim) {
@@ -333,17 +415,27 @@
     downloadBtn.disabled = items.length === 0;
 
     const opts = currentOptions();
+    applyEccLock(!!opts.logo);
     previewEl.innerHTML = "";
     let tooLong = 0;
     items.slice(0, 12).forEach((item) => {
       const cell = document.createElement("figure");
       cell.className = "batch-cell";
       const canvas = document.createElement("canvas");
+      let qr = null;
       try {
-        drawQr(QrCode.encodeText(item.payload, eccValue()), canvas, { ...opts, targetPx: 240 });
+        qr = QrCode.encodeText(item.payload, eccValue());
       } catch (e) {
+        // The one thing the encoder refuses is a row that will not fit; keep
+        // that meaning to itself rather than blaming a drawing fault on it.
         tooLong++;
         cell.classList.add("is-error");
+      }
+      if (qr) {
+        drawQr(qr, canvas, { ...opts, targetPx: 240 });
+        // What the verifier will compare its decode against.
+        canvas.dataset.payload = item.payload;
+        canvas.dataset.name = item.filename;
       }
       cell.appendChild(canvas);
       const caption = document.createElement("figcaption");
@@ -363,17 +455,25 @@
       warn.textContent = tooLong + " row(s) hold more data than a QR code can carry — shorten them or drop the error-correction level.";
       previewEl.appendChild(warn);
     }
+
+    scheduleVerify();
   }
 
   function canvasToBytes(canvas) {
     return new Promise((resolve) => {
-      canvas.toBlob((blob) => {
-        if (!blob) { resolve(null); return; }
-        const reader = new FileReader();
-        reader.onload = () => resolve(new Uint8Array(reader.result));
-        reader.onerror = () => resolve(null);
-        reader.readAsArrayBuffer(blob);
-      }, "image/png");
+      // A logo the browser refuses to read back taints the canvas and makes
+      // toBlob throw; the caller counts that row as a failure rather than dying.
+      try {
+        canvas.toBlob((blob) => {
+          if (!blob) { resolve(null); return; }
+          const reader = new FileReader();
+          reader.onload = () => resolve(new Uint8Array(reader.result));
+          reader.onerror = () => resolve(null);
+          reader.readAsArrayBuffer(blob);
+        }, "image/png");
+      } catch (err) {
+        resolve(null);
+      }
     });
   }
 

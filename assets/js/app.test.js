@@ -12,7 +12,11 @@ const path = require("node:path");
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { buildWifiPayload, buildVCardPayload, normalizeUrl } = require("./app.js");
+const {
+  buildWifiPayload, buildVCardPayload, normalizeUrl,
+  fitContain, logoGeometry, eccWithLogo, scanVerdict, isLightOnDark,
+  renderQrToCanvas, buildQrSvg, LOGO_MIN_PCT, LOGO_MAX_PCT,
+} = require("./app.js");
 const { parseDecodedPayload, parseWifiPayload, parseVCard, parseMeCard, splitEscaped } = require("./decode.js");
 const { detectDelimiter, parseCsv, sanitizeFilename, uniqueNames, buildBatchItems } = require("./batch.js");
 const { crc32, buildZip } = require("./zipwriter.js");
@@ -166,6 +170,216 @@ test("buildBatchItems numbers files when no name column is chosen", () => {
   assert.deepEqual(built.items.map((i) => i.name), ["qr-001", "qr-002"]);
 });
 
+/* ----------------------------- logo geometry ---------------------------- */
+
+test("fitContain letterboxes a non-square logo inside the box", () => {
+  assert.deepEqual(fitContain(10, 200, 100), { width: 10, height: 5 });
+  assert.deepEqual(fitContain(10, 100, 200), { width: 5, height: 10 });
+  assert.deepEqual(fitContain(10, 50, 50), { width: 10, height: 10 });
+  // A sizeless SVG reports 0×0; treat it as square rather than dividing by zero.
+  assert.deepEqual(fitContain(10, 0, 0), { width: 10, height: 10 });
+});
+
+test("logoGeometry centres the logo on the whole symbol, quiet zone included", () => {
+  const g = logoGeometry({ qrSize: 25, margin: 4, sizePct: 20, padPct: 0, plate: "none", imageWidth: 1, imageHeight: 1 });
+  assert.equal(g.dim, 33);
+  assert.equal(g.box, 5); // 20% of 25 modules
+  assert.equal(g.logo.width, 5);
+  assert.equal(g.logo.height, 5);
+  // Centre of the logo == centre of the full symbol.
+  assert.equal(g.logo.x + g.logo.width / 2, 16.5);
+  assert.equal(g.logo.y + g.logo.height / 2, 16.5);
+});
+
+test("logoGeometry sizes the logo as a share of the symbol, not the quiet zone", () => {
+  const tight = logoGeometry({ qrSize: 25, margin: 2, sizePct: 20, imageWidth: 1, imageHeight: 1 });
+  const wide = logoGeometry({ qrSize: 25, margin: 6, sizePct: 20, imageWidth: 1, imageHeight: 1 });
+  assert.equal(tight.logo.width, wide.logo.width);
+});
+
+test("logoGeometry grows the plate by the padding and turns a circle into one radius", () => {
+  const bare = logoGeometry({ qrSize: 100, margin: 4, sizePct: 20, padPct: 0, plate: "rounded", imageWidth: 1, imageHeight: 1 });
+  assert.equal(bare.plate.width, 20);
+
+  const padded = logoGeometry({ qrSize: 100, margin: 4, sizePct: 20, padPct: 0.1, plate: "rounded", imageWidth: 1, imageHeight: 1 });
+  assert.equal(padded.plate.width, 24); // 20 + 2×(0.1 × 20)
+  assert.equal(padded.plate.x + padded.plate.width / 2, 54);
+
+  // A wide logo's circle plate must cover the long side, not the short one.
+  const circle = logoGeometry({ qrSize: 100, margin: 4, sizePct: 20, padPct: 0, plate: "circle", imageWidth: 200, imageHeight: 100 });
+  assert.equal(circle.logo.width, 20);
+  assert.equal(circle.logo.height, 10);
+  assert.equal(circle.plate.width, 20);
+  assert.equal(circle.plate.height, 20);
+  assert.equal(circle.plate.radius, 10); // half the side == a circle
+});
+
+test("logoGeometry reports the share of the symbol that is covered", () => {
+  const g = logoGeometry({ qrSize: 100, margin: 4, sizePct: 20, padPct: 0, plate: "none", imageWidth: 1, imageHeight: 1 });
+  assert.equal(Math.round(g.coverage * 1000) / 1000, 0.04); // 20% of a side is 4% of the area
+});
+
+test("logoGeometry draws an over-large logo as asked instead of quietly shrinking it", () => {
+  // Clamping to the slider's range here would hide the problem from scan
+  // verification, which is the one thing meant to catch it.
+  const g = logoGeometry({ qrSize: 100, margin: 4, sizePct: 50, imageWidth: 1, imageHeight: 1 });
+  assert.equal(g.logo.width, 50);
+});
+
+test("eccWithLogo forces H with a logo and returns the pick without one", () => {
+  assert.equal(eccWithLogo("L", true), "H");
+  assert.equal(eccWithLogo("M", true), "H");
+  assert.equal(eccWithLogo("H", true), "H");
+  assert.equal(eccWithLogo("L", false), "L");
+  assert.equal(eccWithLogo("Q", false), "Q");
+  assert.equal(eccWithLogo("nonsense", false), "M");
+});
+
+/* ------------------------- PNG / SVG export parity ---------------------- */
+
+// A canvas 2D context that records what was drawn instead of drawing it, so the
+// PNG path's geometry can be compared with the SVG path's without a canvas
+// implementation. Both renderers are handed the same logo; if their numbers
+// ever drift apart, the exports stop matching and this test says so.
+function recordingCanvas() {
+  const calls = [];
+  const ctx = {
+    fillStyle: "",
+    fillRect: (x, y, width, height) => calls.push({ op: "fillRect", x, y, width, height, fill: ctx.fillStyle }),
+    drawImage: (img, x, y, width, height) => calls.push({ op: "drawImage", x, y, width, height }),
+    roundRect: (x, y, width, height, r) => calls.push({ op: "roundRect", x, y, width, height, r, fill: ctx.fillStyle }),
+    beginPath() {},
+    fill() {},
+  };
+  return { width: 0, height: 0, getContext: () => ctx, calls };
+}
+
+const LOGO = {
+  image: { fake: true },
+  href: "data:image/png;base64,iVBORw0KGgo=",
+  imageWidth: 200,
+  imageHeight: 100,
+  sizePct: 20,
+  padPct: 0.1,
+  plate: "rounded",
+};
+
+// Only the plate and the logo carry an x/y in the SVG — the background rect is
+// written without one — so this reads back whichever of the two is asked for.
+function svgNumbers(svg, tag) {
+  const m = svg.match(new RegExp("<" + tag + ' x="([-\\d.]+)" y="([-\\d.]+)" width="([-\\d.]+)" height="([-\\d.]+)"'));
+  assert.ok(m, "expected a positioned <" + tag + "> in the SVG");
+  return { x: Number(m[1]), y: Number(m[2]), width: Number(m[3]), height: Number(m[4]) };
+}
+
+test("the PNG and the SVG place the logo and its plate identically", () => {
+  const qr = qrcodegen.QrCode.encodeText("https://qrmint.net/", qrcodegen.QrCode.Ecc.HIGH);
+  const margin = 4;
+  const canvas = recordingCanvas();
+  const px = renderQrToCanvas(qr, canvas, { targetPx: 512, margin, fg: "#0b2119", bg: "#ffffff", logo: LOGO });
+  const scale = px / (qr.size + margin * 2);
+
+  const drawn = canvas.calls.find((c) => c.op === "drawImage");
+  const plate = canvas.calls.find((c) => c.op === "roundRect");
+  const svg = buildQrSvg(qr, { margin, fg: "#0b2119", bg: "#ffffff", logo: LOGO });
+  const svgLogo = svgNumbers(svg, "image");
+  const svgPlate = svgNumbers(svg, "rect");
+
+  // The canvas works in pixels and the SVG in modules; one integer scale apart.
+  ["x", "y", "width", "height"].forEach((k) => {
+    assert.ok(Math.abs(drawn[k] / scale - svgLogo[k]) < 1e-9, "logo " + k + " differs: " + drawn[k] / scale + " vs " + svgLogo[k]);
+    assert.ok(Math.abs(plate[k] / scale - svgPlate[k]) < 1e-9, "plate " + k + " differs");
+  });
+  assert.ok(svg.includes('rx="' + plate.r / scale + '"'), "plate corner radius differs");
+  assert.ok(svg.includes(LOGO.href), "the SVG embeds the logo as a data: URI");
+  // The aspect ratio survives in both: a 2:1 logo stays 2:1.
+  assert.ok(Math.abs(svgLogo.width / svgLogo.height - 2) < 1e-3);
+});
+
+test("the plate is knocked out in the background color in both exports", () => {
+  const qr = qrcodegen.QrCode.encodeText("hello", qrcodegen.QrCode.Ecc.HIGH);
+  const canvas = recordingCanvas();
+  renderQrToCanvas(qr, canvas, { targetPx: 300, margin: 4, fg: "#123456", bg: "#fedcba", logo: LOGO });
+  assert.equal(canvas.calls.find((c) => c.op === "roundRect").fill, "#fedcba");
+  const g = logoGeometry({ qrSize: qr.size, margin: 4, sizePct: LOGO.sizePct, padPct: LOGO.padPct, plate: LOGO.plate, imageWidth: LOGO.imageWidth, imageHeight: LOGO.imageHeight });
+  assert.ok(buildQrSvg(qr, { margin: 4, fg: "#123456", bg: "#fedcba", logo: LOGO })
+    .includes('ry="' + g.plate.radius + '" fill="#fedcba"'));
+});
+
+test("a code with no logo renders exactly as it did before the feature", () => {
+  const qr = qrcodegen.QrCode.encodeText("https://qrmint.net/", qrcodegen.QrCode.Ecc.MEDIUM);
+  const svg = buildQrSvg(qr, { margin: 4, fg: "#0b2119", bg: "#ffffff" });
+  assert.ok(!svg.includes("<image"));
+  const canvas = recordingCanvas();
+  renderQrToCanvas(qr, canvas, { targetPx: 512, margin: 4, fg: "#0b2119", bg: "#ffffff" });
+  assert.equal(canvas.calls.filter((c) => c.op === "drawImage").length, 0);
+});
+
+/* ---------------------------- verdict wording --------------------------- */
+
+test("scanVerdict passes a code that reads back as itself", () => {
+  const v = scanVerdict({ decoded: "https://qrmint.net/", expected: "https://qrmint.net/", ecl: "H" });
+  assert.equal(v.state, "ok");
+  assert.equal(v.label, "Scan-verified");
+});
+
+test("scanVerdict refuses to call an inverted-only code verified", () => {
+  const v = scanVerdict({ decoded: "x", expected: "x", inverted: true, ecl: "H" });
+  assert.equal(v.state, "warn");
+  assert.match(v.detail, /Swap your colors/);
+});
+
+test("scanVerdict names the logo as the fix when a logo is present", () => {
+  const v = scanVerdict({ decoded: null, expected: "x", hasLogo: true, logoPct: 25, plate: "rounded", ecl: "H", contrast: 18 });
+  assert.equal(v.state, "fail");
+  assert.equal(v.label, "Won't scan");
+  assert.match(v.detail, /shrink the logo from 25% to about 19%/);
+  assert.match(v.detail, /backing plate/);
+  // ECC is already as high as it goes, so telling them to raise it is noise.
+  assert.doesNotMatch(v.detail, /error correction/);
+});
+
+test("scanVerdict never suggests shrinking below the smallest size the UI offers", () => {
+  const v = scanVerdict({ decoded: null, expected: "x", hasLogo: true, logoPct: 12, ecl: "H", contrast: 18 });
+  assert.match(v.detail, new RegExp("to about " + LOGO_MIN_PCT + "%"));
+});
+
+test("scanVerdict names error correction and contrast when those are the problem", () => {
+  const v = scanVerdict({ decoded: null, expected: "x", hasLogo: false, ecl: "L", contrast: 1.6 });
+  assert.match(v.detail, /raise error correction to H/);
+  assert.match(v.detail, /only 1\.6:1 apart/);
+  assert.doesNotMatch(v.detail, /logo/);
+});
+
+test("scanVerdict blames colors before the logo when the colors cannot work", () => {
+  // Two colors a shade apart break any code, logo or no logo. Naming the logo
+  // first would send someone off shrinking a logo that was never the problem.
+  const v = scanVerdict({ decoded: null, expected: "x", hasLogo: true, logoPct: 18, ecl: "H", contrast: 1.2 });
+  assert.ok(v.detail.indexOf("contrast") < v.detail.indexOf("logo"), v.detail);
+});
+
+test("scanVerdict tells a light-on-dark code to swap its colors", () => {
+  const v = scanVerdict({ decoded: null, expected: "x", hasLogo: true, logoPct: 18, ecl: "H", contrast: 12, lightOnDark: true });
+  assert.match(v.detail, /swap your colors/);
+  assert.ok(v.detail.indexOf("swap your colors") < v.detail.indexOf("shrink the logo"), v.detail);
+});
+
+test("isLightOnDark spots modules lighter than their background", () => {
+  assert.equal(isLightOnDark("#ffffff", "#0b2119"), true);
+  assert.equal(isLightOnDark("#0b2119", "#ffffff"), false);
+});
+
+test("scanVerdict still says something useful when nothing obvious is wrong", () => {
+  const v = scanVerdict({ decoded: null, expected: "x", hasLogo: false, ecl: "H", contrast: 21 });
+  assert.match(v.detail, /widen the margin/);
+});
+
+test("scanVerdict flags a code that reads back as the wrong data", () => {
+  const v = scanVerdict({ decoded: "something else", expected: "x", ecl: "H" });
+  assert.equal(v.state, "fail");
+  assert.equal(v.label, "Wrong data");
+});
+
 /* -------------------------------- ZIP ---------------------------------- */
 
 test("crc32 matches the standard check value", () => {
@@ -226,6 +440,41 @@ function roundTrip(text, ecc) {
   return result && result.data;
 }
 
+// Paints the logo layer onto an existing raster exactly where logoGeometry says
+// it goes: the plate knocked out in the background color, the logo itself a
+// solid block. A solid block is the worst case a real logo can be, which is the
+// case worth testing — anything softer damages fewer modules.
+function paintLogo(img, geometry, scale) {
+  function box(rect, value) {
+    const x0 = Math.round(rect.x * scale);
+    const y0 = Math.round(rect.y * scale);
+    const x1 = Math.round((rect.x + rect.width) * scale);
+    const y1 = Math.round((rect.y + rect.height) * scale);
+    for (let y = y0; y < y1; y++) {
+      for (let x = x0; x < x1; x++) {
+        if (x < 0 || y < 0 || x >= img.width || y >= img.height) continue;
+        const p = (y * img.width + x) * 4;
+        img.data[p] = img.data[p + 1] = img.data[p + 2] = value;
+      }
+    }
+  }
+  if (geometry.plate) box(geometry.plate, 255);
+  box(geometry.logo, 0);
+  return img;
+}
+
+// generate → rasterise → paint the logo → decode, all through the same helpers
+// the browser uses to place it.
+function roundTripWithLogo(text, { sizePct, padPct = 0.1, plate = "rounded", margin = 4, scale = 6 }) {
+  const ecl = eccWithLogo("M", true);
+  const ecc = { L: qrcodegen.QrCode.Ecc.LOW, M: qrcodegen.QrCode.Ecc.MEDIUM, Q: qrcodegen.QrCode.Ecc.QUARTILE, H: qrcodegen.QrCode.Ecc.HIGH }[ecl];
+  const qr = qrcodegen.QrCode.encodeText(text, ecc);
+  const geometry = logoGeometry({ qrSize: qr.size, margin, sizePct, padPct, plate, imageWidth: 1, imageHeight: 1 });
+  const img = paintLogo(rasterize(qr, scale, margin), geometry, scale);
+  const result = jsQR(img.data, img.width, img.height);
+  return { decoded: result && result.data, ecl, coverage: geometry.coverage };
+}
+
 test("a generated URL code decodes back to the same URL", () => {
   const url = normalizeUrl("qrmint.net/scan-qr-code/");
   assert.equal(roundTrip(url), "https://qrmint.net/scan-qr-code/");
@@ -259,4 +508,38 @@ test("every error-correction level round-trips", () => {
   [LOW, MEDIUM, QUARTILE, HIGH].forEach((ecc) => {
     assert.equal(roundTrip("https://qrmint.net/", ecc), "https://qrmint.net/");
   });
+});
+
+test("a code still decodes with a logo over the middle of it", () => {
+  const url = "https://qrmint.net/wifi-qr-code/";
+  for (let pct = LOGO_MIN_PCT; pct <= LOGO_MAX_PCT; pct++) {
+    const { decoded, ecl } = roundTripWithLogo(url, { sizePct: pct });
+    assert.equal(ecl, "H", "a logo must force H");
+    assert.equal(decoded, url, "a " + pct + "% logo should still scan at H");
+    assert.equal(scanVerdict({ decoded, expected: url, hasLogo: true, logoPct: pct, ecl }).state, "ok");
+  }
+});
+
+test("the whole size range survives every payload kind, plate or no plate", () => {
+  const payloads = [
+    normalizeUrl("qrmint.net"),
+    buildWifiPayload({ ssid: "Cafe Mint", password: "flat;white", enc: "WPA" }),
+    buildVCardPayload({ firstName: "Jane", lastName: "Doe", email: "jane@example.com", phone: "5550100" }),
+  ];
+  payloads.forEach((payload) => {
+    ["none", "rounded", "circle"].forEach((plate) => {
+      const { decoded } = roundTripWithLogo(payload, { sizePct: LOGO_MAX_PCT, plate, padPct: 0.16 });
+      assert.equal(decoded, payload, "failed with a " + plate + " plate");
+    });
+  });
+});
+
+test("a deliberately over-large logo fails the scan check and is told to shrink", () => {
+  const url = "https://qrmint.net/wifi-qr-code/";
+  const { decoded, ecl } = roundTripWithLogo(url, { sizePct: 50 });
+  assert.equal(decoded, null, "a logo over half the symbol must not quietly pass");
+  const verdict = scanVerdict({ decoded, expected: url, hasLogo: true, logoPct: 50, plate: "rounded", ecl });
+  assert.equal(verdict.state, "fail");
+  assert.equal(verdict.label, "Won't scan");
+  assert.match(verdict.detail, /shrink the logo from 50% to about 44%/);
 });

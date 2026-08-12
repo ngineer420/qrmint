@@ -133,6 +133,7 @@
               <option value="Q">Q — ~25%</option>
               <option value="H">H — ~30%</option>
             </select>
+            <p class="field-hint ecc-note" id="opt-ecl-note" hidden>Locked to H with a logo — its ~30% of spare modules is what the logo covers.</p>
           </div>
           <div class="field" style="margin-bottom:0;">
             <label for="opt-margin">Margin</label>
@@ -151,6 +152,42 @@
           </div>
         </div>
       </div>
+      <div class="panel" style="margin-top:16px;">
+        <h2>Center logo</h2>
+        <div class="logo-row">
+          <button type="button" class="icon-btn" id="logo-pick">Choose an image…</button>
+          <img class="logo-thumb" id="logo-thumb" alt="" hidden>
+          <span class="logo-name" id="logo-name">No logo yet — PNG, JPG or SVG</span>
+          <button type="button" class="icon-btn" id="logo-clear" hidden>Remove</button>
+          <input type="file" id="logo-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" hidden>
+        </div>
+        <p class="logo-error" id="logo-error" hidden></p>
+        <div id="logo-options" hidden>
+          <div class="logo-grid">
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-size">Size <span class="logo-out" id="logo-size-out">18%</span></label>
+              <input type="range" id="logo-size" min="10" max="25" step="1" value="18">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-plate">Backing plate</label>
+              <select id="logo-plate">
+                <option value="rounded" selected>Rounded</option>
+                <option value="circle">Circle</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-pad">Plate padding</label>
+              <select id="logo-pad">
+                <option value="0">None</option>
+                <option value="0.08" selected>Snug</option>
+                <option value="0.16">Roomy</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p class="field-hint" style="margin-top:12px;">Your image is read in this tab with <code>FileReader</code> and drawn straight onto the code — it is never uploaded.</p>
+      </div>
     </div>
 
     <div>
@@ -165,6 +202,7 @@
         <p class="field-hint" id="qr-empty">Enter a network name to mint your Wi&#8209;Fi QR code.</p>
         <div class="qr-meta" id="qr-meta"></div>
         <p class="qr-warning" id="qr-warning" hidden></p>
+        <p class="scan-verdict" id="qr-verify" hidden></p>
         <div class="qr-actions">
           <button type="button" class="primary" id="qr-download-png" disabled>Mint PNG</button>
           <button type="button" class="primary" id="qr-download-svg" disabled>Mint SVG</button>
@@ -191,6 +229,10 @@
     <div class="faq-item">
       <h3>Does this work for 5GHz networks?</h3>
       <p>Yes — the QR code just carries the network name and password; it works the same regardless of which band or channel the router uses.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I add a cafe or house logo to the middle?</h3>
+      <p>Yes — pick an image under <strong>Center logo</strong> and it is drawn in the middle of the code, with error correction raised to H so the code still scans. Every render is then decoded again in this tab, so you get a <strong>Scan-verified</strong> badge before you print it rather than a surprise at the door.</p>
     </div>
     <div class="faq-item">
       <h3>What if my network name or password has special characters?</h3>

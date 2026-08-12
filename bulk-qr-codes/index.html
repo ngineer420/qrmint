@@ -152,6 +152,7 @@
               <option value="Q">Q — ~25%</option>
               <option value="H">H — ~30%</option>
             </select>
+            <p class="field-hint ecc-note" id="bopt-ecl-note" hidden>Locked to H with a logo — its ~30% of spare modules is what the logo covers.</p>
           </div>
           <div class="field" style="margin-bottom:0;">
             <label for="bopt-margin">Margin</label>
@@ -170,6 +171,42 @@
           </div>
         </div>
       </div>
+      <div class="panel" style="margin-top:16px;">
+        <h2>Center logo</h2>
+        <div class="logo-row">
+          <button type="button" class="icon-btn" id="blogo-pick">Choose an image…</button>
+          <img class="logo-thumb" id="blogo-thumb" alt="" hidden>
+          <span class="logo-name" id="blogo-name">No logo yet — PNG, JPG or SVG</span>
+          <button type="button" class="icon-btn" id="blogo-clear" hidden>Remove</button>
+          <input type="file" id="blogo-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" hidden>
+        </div>
+        <p class="logo-error" id="blogo-error" hidden></p>
+        <div id="blogo-options" hidden>
+          <div class="logo-grid">
+            <div class="field" style="margin-bottom:0;">
+              <label for="blogo-size">Size <span class="logo-out" id="blogo-size-out">18%</span></label>
+              <input type="range" id="blogo-size" min="10" max="25" step="1" value="18">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="blogo-plate">Backing plate</label>
+              <select id="blogo-plate">
+                <option value="rounded" selected>Rounded</option>
+                <option value="circle">Circle</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="blogo-pad">Plate padding</label>
+              <select id="blogo-pad">
+                <option value="0">None</option>
+                <option value="0.08" selected>Snug</option>
+                <option value="0.16">Roomy</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p class="field-hint" style="margin-top:12px;">Your image is read in this tab with <code>FileReader</code> and drawn straight onto the code — it is never uploaded.</p>
+      </div>
     </div>
 
     <div>
@@ -180,6 +217,7 @@
           <button type="button" class="primary" id="batch-download" disabled>Download ZIP</button>
         </div>
         <p class="batch-progress" id="batch-progress" hidden></p>
+        <p class="scan-verdict" id="batch-verify" hidden></p>
         <div class="batch-preview" id="batch-preview"></div>
       </div>
     </div>
@@ -218,6 +256,10 @@ Front door,WIFI:T:WPA;S:Cafe Guest;P:flatwhite;;</pre>
     <div class="faq-item">
       <h3>What if one row is too long to encode?</h3>
       <p>That row is skipped and counted in the summary rather than failing the whole batch. A QR code tops out at a few thousand characters, and lower error-correction levels leave room for more.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can every code in the batch carry my logo?</h3>
+      <p>Yes — set a <strong>Center logo</strong> once and every code in the ZIP gets it, PNG or SVG. Error correction locks to H for the whole run, and each code in the preview is decoded again in your browser so a logo that breaks the batch shows up before you download 500 of them.</p>
     </div>
     <div class="faq-item">
       <h3>PNG or SVG?</h3>

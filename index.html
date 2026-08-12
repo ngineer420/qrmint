@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)</title>
-<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — or scan one back from an image or your camera. Batch-generate from a CSV. Free, instant, and 100% in your browser.">
+<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — add your logo in the middle, and see it scan-verified before you download. Batch-generate from a CSV. Free, instant, and 100% in your browser.">
 <link rel="canonical" href="https://qrmint.net/">
 <meta name="theme-color" content="#071913">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
-<meta property="og:description" content="Generate QR codes for links, Wi-Fi, contacts and text — scan them back from an image or camera, and batch-generate from a CSV. 100% in your browser.">
+<meta property="og:description" content="Generate QR codes for links, Wi-Fi, contacts and text, with your logo in the centre and every code scan-verified before download. 100% in your browser.">
 <meta property="og:url" content="https://qrmint.net/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
-<meta name="twitter:description" content="Generate QR codes for links, Wi-Fi, contacts and text — scan them back, and batch-generate from a CSV. 100% in your browser.">
+<meta name="twitter:description" content="QR codes for links, Wi-Fi, contacts and text — with a centre logo, and scan-verified before you download. 100% in your browser.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/css/styles.css">
@@ -28,9 +28,11 @@
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Free browser-based QR code generator and reader for URLs, Wi-Fi networks, vCard contact cards and plain text, with PNG and SVG download, image and camera scanning, and batch generation from a CSV. Runs entirely client-side.",
+  "description": "Free browser-based QR code generator and reader for URLs, Wi-Fi networks, vCard contact cards and plain text, with centre-logo embedding, scan verification, PNG and SVG download, image and camera scanning, and batch generation from a CSV. Runs entirely client-side.",
   "featureList": [
     "Generate QR codes for links, Wi-Fi, contact cards and text",
+    "Place a logo in the centre of a code, with error correction raised to H automatically",
+    "Scan-verify every code by decoding it back in the browser before download",
     "Scan and decode QR codes from an image or a live camera",
     "Batch-generate QR codes from a CSV and download them as a ZIP",
     "Download as PNG or SVG"
@@ -256,6 +258,7 @@
               <option value="Q">Q — ~25%</option>
               <option value="H">H — ~30%</option>
             </select>
+            <p class="field-hint ecc-note" id="opt-ecl-note" hidden>Locked to H with a logo — its ~30% of spare modules is what the logo covers.</p>
           </div>
           <div class="field" style="margin-bottom:0;">
             <label for="opt-margin">Margin</label>
@@ -274,6 +277,42 @@
           </div>
         </div>
       </div>
+      <div class="panel" style="margin-top:16px;">
+        <h2>Center logo</h2>
+        <div class="logo-row">
+          <button type="button" class="icon-btn" id="logo-pick">Choose an image…</button>
+          <img class="logo-thumb" id="logo-thumb" alt="" hidden>
+          <span class="logo-name" id="logo-name">No logo yet — PNG, JPG or SVG</span>
+          <button type="button" class="icon-btn" id="logo-clear" hidden>Remove</button>
+          <input type="file" id="logo-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" hidden>
+        </div>
+        <p class="logo-error" id="logo-error" hidden></p>
+        <div id="logo-options" hidden>
+          <div class="logo-grid">
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-size">Size <span class="logo-out" id="logo-size-out">18%</span></label>
+              <input type="range" id="logo-size" min="10" max="25" step="1" value="18">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-plate">Backing plate</label>
+              <select id="logo-plate">
+                <option value="rounded" selected>Rounded</option>
+                <option value="circle">Circle</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-pad">Plate padding</label>
+              <select id="logo-pad">
+                <option value="0">None</option>
+                <option value="0.08" selected>Snug</option>
+                <option value="0.16">Roomy</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p class="field-hint" style="margin-top:12px;">Your image is read in this tab with <code>FileReader</code> and drawn straight onto the code — it is never uploaded.</p>
+      </div>
     </div>
 
     <div>
@@ -288,6 +327,7 @@
         <p class="field-hint" id="qr-empty">Enter a link to mint your QR code.</p>
         <div class="qr-meta" id="qr-meta"></div>
         <p class="qr-warning" id="qr-warning" hidden></p>
+        <p class="scan-verdict" id="qr-verify" hidden></p>
         <div class="qr-actions">
           <button type="button" class="primary" id="qr-download-png" disabled>Mint PNG</button>
           <button type="button" class="primary" id="qr-download-svg" disabled>Mint SVG</button>
@@ -415,6 +455,7 @@
                 <option value="Q">Q — ~25%</option>
                 <option value="H">H — ~30%</option>
               </select>
+              <p class="field-hint ecc-note" id="bopt-ecl-note" hidden>Locked to H with a logo — its ~30% of spare modules is what the logo covers.</p>
             </div>
             <div class="field" style="margin-bottom:0;">
               <label for="bopt-margin">Margin</label>
@@ -433,6 +474,42 @@
             </div>
           </div>
         </div>
+        <div class="panel" style="margin-top:16px;">
+          <h2>Center logo</h2>
+          <div class="logo-row">
+            <button type="button" class="icon-btn" id="blogo-pick">Choose an image…</button>
+            <img class="logo-thumb" id="blogo-thumb" alt="" hidden>
+            <span class="logo-name" id="blogo-name">No logo yet — PNG, JPG or SVG</span>
+            <button type="button" class="icon-btn" id="blogo-clear" hidden>Remove</button>
+            <input type="file" id="blogo-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" hidden>
+          </div>
+          <p class="logo-error" id="blogo-error" hidden></p>
+          <div id="blogo-options" hidden>
+            <div class="logo-grid">
+              <div class="field" style="margin-bottom:0;">
+                <label for="blogo-size">Size <span class="logo-out" id="blogo-size-out">18%</span></label>
+                <input type="range" id="blogo-size" min="10" max="25" step="1" value="18">
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label for="blogo-plate">Backing plate</label>
+                <select id="blogo-plate">
+                  <option value="rounded" selected>Rounded</option>
+                  <option value="circle">Circle</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label for="blogo-pad">Plate padding</label>
+                <select id="blogo-pad">
+                  <option value="0">None</option>
+                  <option value="0.08" selected>Snug</option>
+                  <option value="0.16">Roomy</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <p class="field-hint" style="margin-top:12px;">Your image is read in this tab with <code>FileReader</code> and drawn straight onto the code — it is never uploaded.</p>
+        </div>
       </div>
 
       <div>
@@ -443,6 +520,7 @@
             <button type="button" class="primary" id="batch-download" disabled>Download ZIP</button>
           </div>
           <p class="batch-progress" id="batch-progress" hidden></p>
+          <p class="scan-verdict" id="batch-verify" hidden></p>
           <div class="batch-preview" id="batch-preview"></div>
         </div>
       </div>
@@ -454,6 +532,10 @@
     <p>QR Mint builds every code with a compact <strong>QR Code encoder that runs entirely inside your browser</strong> — the same Reed–Solomon error correction and masking logic used by professional QR libraries, just with no server round-trip. Type a link, Wi&#8209;Fi network, contact, or note; the preview updates live; hit <strong>Mint PNG</strong> or <strong>Mint SVG</strong> to download. Nothing you enter is ever sent anywhere — close the tab and it's gone.</p>
     <h2>Choosing an error-correction level</h2>
     <p>QR codes carry their own repair data, so they can still scan even if part of the code is scuffed, glared, or partly covered by a logo. Higher levels (Q, H) survive more damage but need a denser, larger code for the same content — L or M is plenty for a clean screen or sticker; go higher for anything printed small, laminated, or likely to get scratched.</p>
+    <h2>Putting a logo in the middle</h2>
+    <p>Pick an image and QR Mint draws it dead centre, at 10–25% of the code, with an optional knocked-out plate behind it so the logo sits on clean background instead of on top of modules. Adding a logo <strong>locks error correction to H</strong>: H sets aside about 30% of the code as repair data, and that spare capacity is exactly what a centre logo spends. Your file is read with <code>FileReader</code> and drawn straight onto the canvas — it is never uploaded, and it rides along inside the SVG as a <code>data:</code> URI so the exported file stays self-contained.</p>
+    <h2>Scan verification: the part nobody else does</h2>
+    <p>Every time the preview changes, QR Mint <strong>reads the code back</strong> with the same decoder that powers the <a href="/scan-qr-code/">QR code reader</a>, and tells you whether it actually scanned. A green <em>Scan-verified</em> badge means the code decoded to exactly what you typed. A red warning means it did not — and it names the fix, whether that is a smaller logo, more contrast, or a higher error-correction level. Most generators will happily let you style a code into something unreadable, and you find out after the flyers are printed. This one closes that loop before you download.</p>
     <h2>Where you'll see QR codes minted here</h2>
     <ul>
       <li>Business cards and event badges (contact card mode)</li>
@@ -506,6 +588,14 @@
     <div class="faq-item">
       <h3>I need hundreds of codes. Do I have to make them one at a time?</h3>
       <p>No. <a href="/bulk-qr-codes/">Batch from CSV</a> takes a spreadsheet export, mints one code per row, names each file from a column you choose, and hands the whole set back as a single ZIP.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I put my logo in the middle of the QR code?</h3>
+      <p>Yes. Choose an image under <strong>Center logo</strong> and it is drawn in the middle at the size you pick, with an optional rounded or circular plate behind it. Error correction jumps to H automatically so the code survives the modules the logo covers, and the PNG and SVG downloads look identical. The image never leaves your browser.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I know a logo hasn't broken my code?</h3>
+      <p>QR Mint scans its own output. After each change the code is decoded again in the browser; you get a green <strong>Scan-verified</strong> badge when it reads back correctly, and a red warning naming the exact fix when it doesn't. You never have to trust that a styled code still works — you can see that it does.</p>
     </div>
     <div class="faq-item">
       <h3>Does anything I type get uploaded?</h3>
