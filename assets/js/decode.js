@@ -328,9 +328,12 @@
 
   /* jsQR is 250 KB of decoder that most visitors never need, so it is fetched
      on first use rather than blocking first paint. Still same-origin, still no
-     bundler — just a <script> appended when the tool is actually used. */
+     bundler — just a <script> appended when the tool is actually used. app.js
+     publishes the same loader for the generator's scan verification, so the two
+     tools share one fetch; the local copy below covers decode.js standing alone. */
   let decoderPromise = null;
   function ensureDecoder() {
+    if (window.qrmintEnsureDecoder) return window.qrmintEnsureDecoder();
     if (window.jsQR) return Promise.resolve(window.jsQR);
     if (decoderPromise) return decoderPromise;
     decoderPromise = new Promise((resolve, reject) => {

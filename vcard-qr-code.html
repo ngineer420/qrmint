@@ -142,6 +142,7 @@
               <option value="Q">Q — ~25%</option>
               <option value="H">H — ~30%</option>
             </select>
+            <p class="field-hint ecc-note" id="opt-ecl-note" hidden>Locked to H with a logo — its ~30% of spare modules is what the logo covers.</p>
           </div>
           <div class="field" style="margin-bottom:0;">
             <label for="opt-margin">Margin</label>
@@ -160,6 +161,42 @@
           </div>
         </div>
       </div>
+      <div class="panel" style="margin-top:16px;">
+        <h2>Center logo</h2>
+        <div class="logo-row">
+          <button type="button" class="icon-btn" id="logo-pick">Choose an image…</button>
+          <img class="logo-thumb" id="logo-thumb" alt="" hidden>
+          <span class="logo-name" id="logo-name">No logo yet — PNG, JPG or SVG</span>
+          <button type="button" class="icon-btn" id="logo-clear" hidden>Remove</button>
+          <input type="file" id="logo-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" hidden>
+        </div>
+        <p class="logo-error" id="logo-error" hidden></p>
+        <div id="logo-options" hidden>
+          <div class="logo-grid">
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-size">Size <span class="logo-out" id="logo-size-out">18%</span></label>
+              <input type="range" id="logo-size" min="10" max="25" step="1" value="18">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-plate">Backing plate</label>
+              <select id="logo-plate">
+                <option value="rounded" selected>Rounded</option>
+                <option value="circle">Circle</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="logo-pad">Plate padding</label>
+              <select id="logo-pad">
+                <option value="0">None</option>
+                <option value="0.08" selected>Snug</option>
+                <option value="0.16">Roomy</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p class="field-hint" style="margin-top:12px;">Your image is read in this tab with <code>FileReader</code> and drawn straight onto the code — it is never uploaded.</p>
+      </div>
     </div>
 
     <div>
@@ -174,6 +211,7 @@
         <p class="field-hint" id="qr-empty">Enter at least a name or organization to mint your contact card.</p>
         <div class="qr-meta" id="qr-meta"></div>
         <p class="qr-warning" id="qr-warning" hidden></p>
+        <p class="scan-verdict" id="qr-verify" hidden></p>
         <div class="qr-actions">
           <button type="button" class="primary" id="qr-download-png" disabled>Mint PNG</button>
           <button type="button" class="primary" id="qr-download-svg" disabled>Mint SVG</button>
@@ -200,6 +238,10 @@
     <div class="faq-item">
       <h3>Does it support multiple phone numbers or emails?</h3>
       <p>This generator keeps it to one of each for a clean, reliably-scannable code. For multiple contact methods, list a primary number and add the rest in a linked website or text QR code instead.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I put a company logo in the centre?</h3>
+      <p>Yes — pick an image under <strong>Center logo</strong>, size it between 10% and 25% of the code, and give it a plate if you want clean space around it. Error correction locks to H so the code survives the covered modules, and the code is decoded again after every change so you know the card still scans before it goes to the printer.</p>
     </div>
     <div class="faq-item">
       <h3>Is my contact information stored anywhere?</h3>
