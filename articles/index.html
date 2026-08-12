@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy Policy — qrmint.net</title>
-<meta name="description" content="Privacy policy for qrmint.net, the free browser-based QR code generator.">
-<link rel="canonical" href="https://qrmint.net/privacy/">
+<title>QR Code Guides — How They Work, Error Correction, Wi&#8209;Fi &amp; Design | QR Mint</title>
+<meta name="description" content="Four plain-English guides to QR codes: how the modules and finder patterns encode data, what error correction levels L/M/Q/H really buy you, how the Wi-Fi payload format works, and how far you can push a code's design before scanners give up.">
+<link rel="canonical" href="https://qrmint.net/articles/">
 <meta name="theme-color" content="#071913">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/css/styles.css?v=2">
@@ -48,7 +48,7 @@
         <li><a href="/scan-qr-code/">QR Code Reader</a></li>
         <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
       </ul>
-      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+      <p class="tb-hub"><a href="/articles/" aria-current="page">All 4 QR code guides →</a></p>
     </div>
   </details>
   <div class="tb-scrim"></div>
@@ -61,36 +61,44 @@
   </ul>
 </nav>
 <!-- nav:end -->
+
 <main id="main" class="container-narrow">
-  <h1>Privacy Policy</h1>
-  <p>Last updated: July 2026</p>
+  <h1>QR code guides</h1>
+  <p>Four explainers for when the generator has done its job and you want to know what actually happened. No marketing, no app downloads — just how the format works and where it breaks.</p>
 
-  <p>qrmint.net ("we", "the site") provides a free browser-based QR code generator for links, Wi&#8209;Fi networks, contact cards and plain text. This page explains what data is and isn't collected when you use the site.</p>
-
-  <h2>How the generator works</h2>
-  <p>Every QR code is built and rendered entirely in your browser using JavaScript. Anything you type — a link, a Wi&#8209;Fi password, a contact's phone number, a note — is processed locally on your device and is never transmitted to, or stored on, any server operated by this site. Closing the tab discards everything.</p>
-
-  <h2>Cookies and advertising</h2>
-  <p>This site may display advertisements served by third-party ad networks, such as Google AdSense. These networks may use cookies or similar technologies to serve ads based on your prior visits to this or other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visit to this site and/or other sites on the internet.</p>
-  <p>You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>, or generally at <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">aboutads.info</a>.</p>
-
-  <h2>Analytics</h2>
-  <p>We may use privacy-respecting analytics to understand aggregate traffic (e.g. page views, approximate location by country, device type). This data is not linked to the content you encode into a QR code.</p>
-
-  <h2>Contact</h2>
-  <p>Questions about this policy can be sent to the site owner via the contact link in the footer.</p>
+  <div class="article-cards">
+    <div class="faq-item">
+      <h3><a href="/articles/how-qr-codes-work.html">How QR codes actually work</a></h3>
+      <p>Modules, finder patterns, and Reed–Solomon error correction — the anatomy of a QR code, explained from the pixel up.</p>
+    </div>
+    <div class="faq-item">
+      <h3><a href="/articles/qr-code-error-correction-levels-explained.html">Error correction levels explained: L, M, Q, H</a></h3>
+      <p>What each level actually tolerates, how much bigger the code gets, and how to pick the right one for print vs. screen.</p>
+    </div>
+    <div class="faq-item">
+      <h3><a href="/articles/how-to-share-wifi-with-a-qr-code.html">How to share Wi&#8209;Fi with a QR code</a></h3>
+      <p>The WIFI: payload format, what phones do when they scan it, and the security tradeoffs worth knowing before you print one.</p>
+    </div>
+    <div class="faq-item">
+      <h3><a href="/articles/qr-code-design-tips-that-still-scan.html">QR code design tips that still scan</a></h3>
+      <p>Colors, contrast, logos, and quiet zones — how far you can push the look of a code before a scanner gives up on it.</p>
+    </div>
+  </div>
 </main>
+
 <footer class="site-footer">
   <div class="footer-inner">
     <div>© <span id="year"></span> qrmint.net</div>
     <div class="footer-links">
       <a href="/">Home</a>
+      <a href="/articles/">Guides</a>
+      <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </div>
   </div>
 </footer>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 <script src="/assets/js/nav.js?v=2"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
-<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>

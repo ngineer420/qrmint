@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="QR codes for links, Wi-Fi, contacts and text — with a centre logo, and scan-verified before you download. 100% in your browser.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/styles.css?v=2">
 
 <script type="application/ld+json">
 {
@@ -69,6 +69,35 @@
     </div>
   </div>
 </header>
+
+<!-- nav:start -->
+<nav class="toolbar" aria-label="Tools">
+  <details class="tb-menu">
+    <summary class="tb-trigger" aria-label="All 5 tools">
+      <span class="tb-glyph" aria-hidden="true">&#9636;</span>
+      <span class="tb-label">All 5<span class="tb-label-long"> tools</span></span>
+    </summary>
+    <div class="tb-sheet is-flat">
+      <ul>
+        <li><a href="/" aria-current="page">Link &amp; Text QR Code</a></li>
+        <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+        <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
+        <li><a href="/scan-qr-code/">QR Code Reader</a></li>
+        <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+      </ul>
+      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+    </div>
+  </details>
+  <div class="tb-scrim"></div>
+  <ul class="tb-rail">
+    <li><a href="/" aria-current="page">Link</a></li>
+    <li><a href="/wifi-qr-code/">Wi‑Fi</a></li>
+    <li><a href="/vcard-qr-code/">Contact card</a></li>
+    <li><a href="/scan-qr-code/">Scan a code</a></li>
+    <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+  </ul>
+</nav>
+<!-- nav:end -->
 
 <main id="main">
   <div class="hero">
@@ -129,19 +158,19 @@
     </div>
   </div>
 
-  <nav role="tablist" class="tabbar" aria-label="QR code type">
-    <a role="tab" id="tab-url" href="/" aria-controls="panel-url" aria-selected="true" aria-current="page" class="tab-btn is-active">Link</a>
-    <a role="tab" id="tab-wifi" href="/wifi-qr-code/" aria-controls="panel-wifi" aria-selected="false" class="tab-btn" tabindex="-1">Wi&#8209;Fi</a>
-    <a role="tab" id="tab-vcard" href="/vcard-qr-code/" aria-controls="panel-vcard" aria-selected="false" class="tab-btn" tabindex="-1">Contact card</a>
-    <a role="tab" id="tab-text" href="/" aria-controls="panel-text" aria-selected="false" class="tab-btn" tabindex="-1">Text</a>
-    <a role="tab" id="tab-decode" href="/scan-qr-code/" aria-controls="panel-decode" aria-selected="false" class="tab-btn" tabindex="-1">Scan a code</a>
-    <a role="tab" id="tab-batch" href="/bulk-qr-codes/" aria-controls="panel-batch" aria-selected="false" class="tab-btn" tabindex="-1">Batch from CSV</a>
-  </nav>
-
   <div class="generator-grid" id="generator-grid">
     <div>
+      <!-- Link and Plain text were two tabs pointing at the same URL, which is
+           what made the old bar show six links for five destinations. They are
+           one destination with two payload types, so the choice lives here, in
+           the tool's own control panel, where a parameter belongs. -->
+      <div class="payload-switch" id="payload-switch" role="group" aria-label="What to encode">
+        <button type="button" data-payload="url" aria-pressed="true">Link</button>
+        <button type="button" data-payload="text" aria-pressed="false">Plain text</button>
+      </div>
+
       <!-- ===================== LINK / URL ===================== -->
-      <section role="tabpanel" id="panel-url" aria-labelledby="tab-url" class="tab-panel active">
+      <section id="panel-url" class="tab-panel active">
         <div class="panel">
           <h2>Link</h2>
           <div class="field">
@@ -153,7 +182,7 @@
       </section>
 
       <!-- ===================== WIFI ===================== -->
-      <section role="tabpanel" id="panel-wifi" aria-labelledby="tab-wifi" class="tab-panel" hidden>
+      <section id="panel-wifi" class="tab-panel" hidden>
         <div class="panel">
           <h2>Wi&#8209;Fi network</h2>
           <div class="field">
@@ -186,7 +215,7 @@
       </section>
 
       <!-- ===================== VCARD ===================== -->
-      <section role="tabpanel" id="panel-vcard" aria-labelledby="tab-vcard" class="tab-panel" hidden>
+      <section id="panel-vcard" class="tab-panel" hidden>
         <div class="panel">
           <h2>Contact card</h2>
           <div class="field-grid cols-2">
@@ -228,7 +257,7 @@
       </section>
 
       <!-- ===================== TEXT ===================== -->
-      <section role="tabpanel" id="panel-text" aria-labelledby="tab-text" class="tab-panel" hidden>
+      <section id="panel-text" class="tab-panel" hidden>
         <div class="panel">
           <h2>Plain text</h2>
           <div class="field">
@@ -342,7 +371,7 @@
   </div>
 
   <!-- ===================== SCAN / DECODE ===================== -->
-  <section role="tabpanel" id="panel-decode" aria-labelledby="tab-decode" class="tab-panel" hidden>
+  <section id="panel-decode" class="tab-panel" hidden>
     <div class="tool-grid" id="decode-tool">
       <div>
         <div class="panel">
@@ -381,7 +410,7 @@
   </section>
 
   <!-- ===================== BATCH FROM CSV ===================== -->
-  <section role="tabpanel" id="panel-batch" aria-labelledby="tab-batch" class="tab-panel" hidden>
+  <section id="panel-batch" class="tab-panel" hidden>
     <div class="tool-grid" id="batch-tool">
       <div>
         <div class="panel">
@@ -612,18 +641,20 @@
       <a href="/vcard-qr-code/">vCard QR Code</a>
       <a href="/scan-qr-code/">Scan a QR Code</a>
       <a href="/bulk-qr-codes/">Bulk from CSV</a>
+      <a href="/articles/">Guides</a>
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </div>
   </div>
 </footer>
 
+<script src="/assets/js/nav.js?v=2"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 
-<script src="/assets/js/qrcodegen.js"></script>
-<script src="/assets/js/zipwriter.js"></script>
-<script src="/assets/js/app.js"></script>
-<script src="/assets/js/decode.js"></script>
-<script src="/assets/js/batch.js"></script>
+<script src="/assets/js/qrcodegen.js?v=2"></script>
+<script src="/assets/js/zipwriter.js?v=2"></script>
+<script src="/assets/js/app.js?v=2"></script>
+<script src="/assets/js/decode.js?v=2"></script>
+<script src="/assets/js/batch.js?v=2"></script>
 </body>
 </html>
