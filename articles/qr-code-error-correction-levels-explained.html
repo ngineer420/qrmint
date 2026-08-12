@@ -8,7 +8,7 @@
 <link rel="canonical" href="https://qrmint.net/articles/qr-code-error-correction-levels-explained.html">
 <meta name="theme-color" content="#071913">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/styles.css?v=2">
 <script>
 (function () {
   var t = localStorage.getItem("qrmint-theme");
@@ -18,6 +18,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="/" aria-label="QR Mint home">
@@ -31,7 +32,36 @@
     </a>
   </div>
 </header>
-<main class="container-narrow">
+
+<!-- nav:start -->
+<nav class="toolbar" aria-label="Tools">
+  <details class="tb-menu">
+    <summary class="tb-trigger" aria-label="All 5 tools">
+      <span class="tb-glyph" aria-hidden="true">&#9636;</span>
+      <span class="tb-label">All 5<span class="tb-label-long"> tools</span></span>
+    </summary>
+    <div class="tb-sheet is-flat">
+      <ul>
+        <li><a href="/">Link &amp; Text QR Code</a></li>
+        <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+        <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
+        <li><a href="/scan-qr-code/">QR Code Reader</a></li>
+        <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+      </ul>
+      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+    </div>
+  </details>
+  <div class="tb-scrim"></div>
+  <ul class="tb-rail">
+    <li><a href="/">Link</a></li>
+    <li><a href="/wifi-qr-code/">Wi‑Fi</a></li>
+    <li><a href="/vcard-qr-code/">Contact card</a></li>
+    <li><a href="/scan-qr-code/">Scan a code</a></li>
+    <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+  </ul>
+</nav>
+<!-- nav:end -->
+<main id="main" class="container-narrow">
   <h1>QR Code Error Correction Levels Explained: L, M, Q, H</h1>
 
   <p>Every QR code carries its own repair data, which is why a code can still scan even after part of it is torn, smudged, glared-out, or covered by a logo. How much damage it can survive is a choice you make up front — QR Mint calls it "Error correction" in the options panel, with four levels: <strong>L, M, Q, and H</strong>. Picking the right one is a real tradeoff, not a "more is always better" setting, so here's what each level actually buys you.</p>
@@ -66,11 +96,13 @@
     <div>© <span id="year"></span> qrmint.net</div>
     <div class="footer-links">
       <a href="/">Home</a>
+      <a href="/articles/">Guides</a>
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </div>
   </div>
 </footer>
+<script src="/assets/js/nav.js?v=2"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>

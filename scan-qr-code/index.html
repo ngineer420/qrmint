@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="Decode a QR code from a photo, a pasted screenshot, or your camera. Nothing is uploaded.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/styles.css?v=2">
 
 <script type="application/ld+json">
 {
@@ -61,6 +61,35 @@
   </div>
 </header>
 
+<!-- nav:start -->
+<nav class="toolbar" aria-label="Tools">
+  <details class="tb-menu">
+    <summary class="tb-trigger" aria-label="All 5 tools">
+      <span class="tb-glyph" aria-hidden="true">&#9636;</span>
+      <span class="tb-label">All 5<span class="tb-label-long"> tools</span></span>
+    </summary>
+    <div class="tb-sheet is-flat">
+      <ul>
+        <li><a href="/">Link &amp; Text QR Code</a></li>
+        <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+        <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
+        <li><a href="/scan-qr-code/" aria-current="page">QR Code Reader</a></li>
+        <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+      </ul>
+      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+    </div>
+  </details>
+  <div class="tb-scrim"></div>
+  <ul class="tb-rail">
+    <li><a href="/">Link</a></li>
+    <li><a href="/wifi-qr-code/">Wi‑Fi</a></li>
+    <li><a href="/vcard-qr-code/">Contact card</a></li>
+    <li><a href="/scan-qr-code/" aria-current="page">Scan a code</a></li>
+    <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+  </ul>
+</nav>
+<!-- nav:end -->
+
 <main id="main">
   <div class="hero">
     <div class="hero-inner">
@@ -69,15 +98,6 @@
       <p class="trust-line">100% client-side<span class="dot">•</span>your camera feed never leaves the browser<span class="dot">•</span>free</p>
     </div>
   </div>
-
-  <nav role="tablist" class="tabbar" aria-label="QR code type">
-    <a role="tab" href="/" class="tab-btn">Link</a>
-    <a role="tab" href="/wifi-qr-code/" class="tab-btn">Wi&#8209;Fi</a>
-    <a role="tab" href="/vcard-qr-code/" class="tab-btn">Contact card</a>
-    <a role="tab" href="/" class="tab-btn">Text</a>
-    <a role="tab" href="/scan-qr-code/" class="tab-btn is-active" aria-current="page">Scan a code</a>
-    <a role="tab" href="/bulk-qr-codes/" class="tab-btn">Batch from CSV</a>
-  </nav>
 
   <div class="tool-grid" id="decode-tool">
     <div>
@@ -169,17 +189,19 @@
     <div>© <span id="year"></span> qrmint.net</div>
     <div class="footer-links">
       <a href="/">Home</a>
+      <a href="/articles/">Guides</a>
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </div>
   </div>
 </footer>
 
+<script src="/assets/js/nav.js?v=2"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 
 <!-- No qrcodegen.js here: this page only reads codes, it never writes one.
      jsqr.js is fetched by decode.js on first use rather than up front. -->
-<script src="/assets/js/app.js"></script>
-<script src="/assets/js/decode.js"></script>
+<script src="/assets/js/app.js?v=2"></script>
+<script src="/assets/js/decode.js?v=2"></script>
 </body>
 </html>

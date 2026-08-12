@@ -639,19 +639,14 @@
     });
   })();
 
-  /* ------------------------------- tabs ---------------------------------- */
+  /* ------------------------------- panels -------------------------------- */
 
   let currentMode = "url";
 
   // Figure out which mode(s) this page has. A dedicated page (e.g.
-  // wifi-qr-code.html) only ever has one #panel-* in the DOM, regardless of
-  // whether its tabbar links carry ids — so detect the mode from the panel
-  // itself, not from the tabbar. The homepage has all four panels and gets
-  // full tabbed switching.
-  const modeOf = {
-    "tab-url": "url", "tab-wifi": "wifi", "tab-vcard": "vcard", "tab-text": "text",
-    "tab-decode": "decode", "tab-batch": "batch",
-  };
+  // wifi-qr-code.html) only ever has one #panel-* in the DOM, so detect the
+  // mode from the panel itself. The homepage mounts all of them and gets the
+  // instant switching below.
   const panelIdToMode = { "panel-url": "url", "panel-wifi": "wifi", "panel-vcard": "vcard", "panel-text": "text" };
   const presentModePanels = Object.keys(panelIdToMode).filter((id) => document.getElementById(id));
   if (presentModePanels.length === 1) currentMode = panelIdToMode[presentModePanels[0]];
@@ -661,65 +656,113 @@
   // feeding it.
   const GENERATOR_MODES = { url: true, wifi: true, vcard: true, text: true };
 
-  (function initTabs() {
-    const tabIds = ["tab-url", "tab-wifi", "tab-vcard", "tab-text", "tab-decode", "tab-batch"];
-    const tabs = tabIds.map((id) => document.getElementById(id)).filter(Boolean);
+  /* ---- homepage instant tool switch ----
+     The toolbar's links are real navigation on every page. The homepage is the
+     one page that mounts every panel, so there a plain left-click swaps the
+     panel in place and pushes the tool's clean URL instead. Both the rail and
+     the sheet are wired, so the two routes to a tool behave identically.
+
+     This is no longer a tablist. The roving tabindex that came with that
+     pattern shipped five of the six links with tabindex="-1", i.e. out of tab
+     order entirely, and announced site navigation as tabs. */
+  (function initToolPanels() {
+    const PANEL_FOR = {
+      "/": "panel-url",
+      "/wifi-qr-code": "panel-wifi",
+      "/vcard-qr-code": "panel-vcard",
+      "/scan-qr-code": "panel-decode",
+      "/bulk-qr-codes": "panel-batch",
+    };
+    const MODE_FOR_PANEL = {
+      "panel-url": "url", "panel-wifi": "wifi", "panel-vcard": "vcard",
+      "panel-text": "text", "panel-decode": "decode", "panel-batch": "batch",
+    };
+    const ALL_PANELS = Object.keys(MODE_FOR_PANEL);
     const panels = {};
-    tabs.forEach((t) => {
-      const p = document.getElementById(t.getAttribute("aria-controls"));
-      if (p) panels[t.id] = p;
-    });
+    ALL_PANELS.forEach((id) => (panels[id] = document.getElementById(id)));
+    // A dedicated tool page mounts one panel: its toolbar links are plain
+    // navigation and there is nothing here to do.
+    if (!ALL_PANELS.every((id) => panels[id])) return;
 
-    const isHomepage = tabs.length > 0 && tabs.every((t) => panels[t.id]);
-    if (!isHomepage) return;
+    const bar = document.querySelector(".toolbar");
+    if (!bar) return;
+    const grid = document.getElementById("generator-grid");
+    const payloadSwitch = document.getElementById("payload-switch");
+    const links = Array.from(bar.querySelectorAll(".tb-rail a[href], .tb-sheet a[href]"));
 
-    function select(tab, { focus = false, push = false } = {}) {
-      tabs.forEach((t) => {
-        const active = t === tab;
-        t.setAttribute("aria-selected", String(active));
-        t.tabIndex = active ? 0 : -1;
-        t.classList.toggle("is-active", active);
-        if (active) t.setAttribute("aria-current", "page");
-        else t.removeAttribute("aria-current");
-        panels[t.id].hidden = !active;
-        panels[t.id].classList.toggle("active", active);
+    function cleanPath(pathname) {
+      const p = pathname.replace(/\/index\.html$/, "/").replace(/\.html$/, "").replace(/\/+$/, "");
+      return p || "/";
+    }
+    function panelForPath(pathname) {
+      return PANEL_FOR[cleanPath(pathname)] || null;
+    }
+
+    function activate(href, { push = false, payload = null } = {}) {
+      // "/" mounts two payload types; which one is showing is remembered so a
+      // return trip from Wi-Fi does not silently drop back to Link.
+      const id = payload || panelForPath(href) || "panel-url";
+      ALL_PANELS.forEach((pid) => {
+        const on = pid === id;
+        panels[pid].hidden = !on;
+        panels[pid].classList.toggle("active", on);
       });
-      currentMode = modeOf[tab.id];
+      currentMode = MODE_FOR_PANEL[id];
       const isGenerator = !!GENERATOR_MODES[currentMode];
-      const grid = document.getElementById("generator-grid");
       if (grid) grid.hidden = !isGenerator;
+
+      // The URL moved, so the marked chip has to move with it.
+      const here = cleanPath(href);
+      links.forEach((a) => {
+        if (cleanPath(a.getAttribute("href")) === here) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+
+      // The payload switch belongs to the "/" destination only.
+      if (payloadSwitch) {
+        payloadSwitch.hidden = !(currentMode === "url" || currentMode === "text");
+        payloadSwitch.querySelectorAll("button").forEach((b) => {
+          b.setAttribute("aria-pressed", String(b.dataset.payload === currentMode));
+        });
+      }
       // Leaving the reader must switch the camera light off, not just hide it.
       if (currentMode !== "decode" && typeof window.qrmintStopCamera === "function") window.qrmintStopCamera();
-      if (push) history.pushState({ tool: tab.id }, "", tab.getAttribute("href"));
-      if (focus) tab.focus();
+      if (push) history.pushState({ panel: id }, "", href);
       if (isGenerator) scheduleUpdate();
     }
 
-    tabs.forEach((tab, i) => {
-      tab.addEventListener("click", (e) => {
-        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        e.preventDefault();
-        select(tab, { push: true });
-      });
-      tab.addEventListener("keydown", (e) => {
-        let target;
-        if (e.key === "ArrowRight") target = tabs[(i + 1) % tabs.length];
-        else if (e.key === "ArrowLeft") target = tabs[(i - 1 + tabs.length) % tabs.length];
-        else if (e.key === "Home") target = tabs[0];
-        else if (e.key === "End") target = tabs[tabs.length - 1];
-        if (!target) return;
-        e.preventDefault();
-        select(target, { focus: true, push: true });
-      });
+    bar.addEventListener("click", (e) => {
+      const link = e.target.closest("a[href]");
+      if (!link || !bar.contains(link) || e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const href = link.getAttribute("href");
+      if (!panelForPath(href)) return; // the guides hub is real navigation
+      e.preventDefault();
+      activate(href, { push: true });
+      const menu = bar.querySelector("details.tb-menu");
+      if (menu) menu.open = false;
     });
+
+    if (payloadSwitch) {
+      payloadSwitch.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-payload]");
+        if (!btn) return;
+        // Same URL either way: this is a parameter of the tool, not a different
+        // destination, so it replaces the history entry instead of pushing one.
+        const id = btn.dataset.payload === "text" ? "panel-text" : "panel-url";
+        activate("/", { payload: id });
+        history.replaceState({ panel: id }, "", location.pathname + location.search);
+      });
+    }
 
     window.addEventListener("popstate", (e) => {
-      const id = (e.state && e.state.tool) || "tab-url";
-      select(document.getElementById(id) || tabs[0], { focus: false, push: false });
+      const id = e.state && e.state.panel;
+      activate(location.pathname, { payload: id === "panel-text" ? id : null });
     });
 
-    const current = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
-    history.replaceState({ tool: current.id }, "", location.pathname + location.search);
+    activate(location.pathname);
+    history.replaceState({ panel: panelForPath(location.pathname) || "panel-url" },
+      "", location.pathname + location.search);
   })();
 
   const yearEl = document.getElementById("year");

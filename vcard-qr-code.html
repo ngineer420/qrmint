@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="Turn your name, phone, email and company into a scannable contact-card QR code.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/styles.css?v=2">
 
 <script type="application/ld+json">
 {
@@ -61,6 +61,35 @@
   </div>
 </header>
 
+<!-- nav:start -->
+<nav class="toolbar" aria-label="Tools">
+  <details class="tb-menu">
+    <summary class="tb-trigger" aria-label="All 5 tools">
+      <span class="tb-glyph" aria-hidden="true">&#9636;</span>
+      <span class="tb-label">All 5<span class="tb-label-long"> tools</span></span>
+    </summary>
+    <div class="tb-sheet is-flat">
+      <ul>
+        <li><a href="/">Link &amp; Text QR Code</a></li>
+        <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+        <li><a href="/vcard-qr-code/" aria-current="page">vCard QR Code</a></li>
+        <li><a href="/scan-qr-code/">QR Code Reader</a></li>
+        <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+      </ul>
+      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+    </div>
+  </details>
+  <div class="tb-scrim"></div>
+  <ul class="tb-rail">
+    <li><a href="/">Link</a></li>
+    <li><a href="/wifi-qr-code/">Wi‑Fi</a></li>
+    <li><a href="/vcard-qr-code/" aria-current="page">Contact card</a></li>
+    <li><a href="/scan-qr-code/">Scan a code</a></li>
+    <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+  </ul>
+</nav>
+<!-- nav:end -->
+
 <main id="main">
   <div class="hero">
     <div class="hero-inner">
@@ -69,15 +98,6 @@
       <p class="trust-line">100% client-side<span class="dot">•</span>details never leave your browser<span class="dot">•</span>free</p>
     </div>
   </div>
-
-  <nav role="tablist" class="tabbar" aria-label="QR code type">
-    <a role="tab" href="/" class="tab-btn">Link</a>
-    <a role="tab" href="/wifi-qr-code/" class="tab-btn">Wi&#8209;Fi</a>
-    <a role="tab" href="/vcard-qr-code/" class="tab-btn is-active" aria-current="page">Contact card</a>
-    <a role="tab" href="/" class="tab-btn">Text</a>
-    <a role="tab" href="/scan-qr-code/" class="tab-btn">Scan a code</a>
-    <a role="tab" href="/bulk-qr-codes/" class="tab-btn">Batch from CSV</a>
-  </nav>
 
   <div class="generator-grid">
     <div>
@@ -248,16 +268,6 @@
       <p>No — the vCard is built and encoded entirely in your browser. QR Mint never sees or stores what you type.</p>
     </div>
   </section>
-
-  <nav class="container-narrow" aria-label="Other QR code types" style="padding-top:0;">
-    <h2 style="margin-top:0;">More QR code types</h2>
-    <ul>
-      <li><a href="/wifi-qr-code/">Wi&#8209;Fi QR Code Generator</a> — share network access instantly.</li>
-      <li><a href="/">Link &amp; text QR codes</a> — the full generator with all four modes.</li>
-      <li><a href="/scan-qr-code/">QR code reader</a> — decode a code from an image or your camera.</li>
-      <li><a href="/bulk-qr-codes/">Bulk QR codes from a CSV</a> — one code per row, zipped.</li>
-    </ul>
-  </nav>
 </main>
 
 <footer class="site-footer">
@@ -265,15 +275,17 @@
     <div>© <span id="year"></span> qrmint.net</div>
     <div class="footer-links">
       <a href="/">Home</a>
+      <a href="/articles/">Guides</a>
       <a href="/privacy/">Privacy</a>
       <a href="/terms/">Terms</a>
     </div>
   </div>
 </footer>
 
+<script src="/assets/js/nav.js?v=2"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 
-<script src="/assets/js/qrcodegen.js"></script>
-<script src="/assets/js/app.js"></script>
+<script src="/assets/js/qrcodegen.js?v=2"></script>
+<script src="/assets/js/app.js?v=2"></script>
 </body>
 </html>
