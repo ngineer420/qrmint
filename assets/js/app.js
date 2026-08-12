@@ -389,7 +389,13 @@
     decoderPromise = new Promise((resolve, reject) => {
       const s = document.createElement("script");
       s.src = "/assets/js/jsqr.js";
-      s.onload = () => (window.jsQR ? resolve(window.jsQR) : reject(new Error("decoder-missing")));
+      // Both failure paths clear the cached promise. Holding on to a rejected
+      // one would leave verification broken for the rest of the visit.
+      s.onload = () => {
+        if (window.jsQR) { resolve(window.jsQR); return; }
+        decoderPromise = null;
+        reject(new Error("decoder-missing"));
+      };
       s.onerror = () => { decoderPromise = null; reject(new Error("decoder-failed")); };
       document.head.appendChild(s);
     });

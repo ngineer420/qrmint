@@ -422,14 +422,20 @@
       const cell = document.createElement("figure");
       cell.className = "batch-cell";
       const canvas = document.createElement("canvas");
+      let qr = null;
       try {
-        drawQr(QrCode.encodeText(item.payload, eccValue()), canvas, { ...opts, targetPx: 240 });
+        qr = QrCode.encodeText(item.payload, eccValue());
+      } catch (e) {
+        // The one thing the encoder refuses is a row that will not fit; keep
+        // that meaning to itself rather than blaming a drawing fault on it.
+        tooLong++;
+        cell.classList.add("is-error");
+      }
+      if (qr) {
+        drawQr(qr, canvas, { ...opts, targetPx: 240 });
         // What the verifier will compare its decode against.
         canvas.dataset.payload = item.payload;
         canvas.dataset.name = item.filename;
-      } catch (e) {
-        tooLong++;
-        cell.classList.add("is-error");
       }
       cell.appendChild(canvas);
       const caption = document.createElement("figcaption");
