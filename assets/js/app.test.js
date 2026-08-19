@@ -14,6 +14,8 @@ const assert = require("node:assert/strict");
 
 const {
   buildWifiPayload, buildVCardPayload, normalizeUrl,
+  normalizePhone, buildPhonePayload, buildEmailPayload, buildSmsPayload,
+  buildWhatsAppPayload, buildGeoPayload,
   fitContain, logoGeometry, eccWithLogo, scanVerdict, isLightOnDark,
   renderQrToCanvas, buildQrSvg, LOGO_MIN_PCT, LOGO_MAX_PCT,
 } = require("./app.js");
@@ -542,4 +544,124 @@ test("a deliberately over-large logo fails the scan check and is told to shrink"
   assert.equal(verdict.state, "fail");
   assert.equal(verdict.label, "Won't scan");
   assert.match(verdict.detail, /shrink the logo from 50% to about 44%/);
+});
+
+/* ------------------- email, SMS, WhatsApp, geo and phone ------------------ */
+
+test("normalizePhone keeps one leading + and the digits", () => {
+  assert.equal(normalizePhone("+1 (555) 010-9999"), "+15550109999");
+  assert.equal(normalizePhone("555.010.9999"), "5550109999");
+  assert.equal(normalizePhone("  "), "");
+  assert.equal(normalizePhone("no digits here"), "");
+});
+
+test("buildPhonePayload writes a tel: URI", () => {
+  assert.equal(buildPhonePayload({ number: "+1 555 010 9999" }), "tel:+15550109999");
+  assert.equal(buildPhonePayload({ number: "" }), "");
+  assert.equal(buildPhonePayload({}), "");
+});
+
+test("buildEmailPayload encodes the subject and body, not the address", () => {
+  assert.equal(buildEmailPayload({ to: "hi@example.com" }), "mailto:hi@example.com");
+  assert.equal(
+    buildEmailPayload({ to: "hi@example.com", subject: "Booth 214" }),
+    "mailto:hi@example.com?subject=Booth%20214"
+  );
+  assert.equal(
+    buildEmailPayload({ to: "hi@example.com", subject: "A & B", body: "line one" }),
+    "mailto:hi@example.com?subject=A%20%26%20B&body=line%20one"
+  );
+  // An "&" in the subject must stay in the subject rather than open body=.
+  const parsed = parseDecodedPayload(buildEmailPayload({ to: "hi@example.com", subject: "A & B" }));
+  assert.equal(parsed.kind, "email");
+  assert.deepEqual(parsed.fields, [
+    { label: "To", value: "hi@example.com" },
+    { label: "Subject", value: "A & B" },
+  ]);
+});
+
+test("buildEmailPayload needs an address and drops whitespace inside one", () => {
+  assert.equal(buildEmailPayload({ subject: "orphan" }), "");
+  assert.equal(buildEmailPayload({ to: "  hi @example.com " }), "mailto:hi@example.com");
+});
+
+test("buildSmsPayload writes SMSTO:number:message", () => {
+  assert.equal(buildSmsPayload({ number: "+1 555 010 9999" }), "SMSTO:+15550109999");
+  assert.equal(
+    buildSmsPayload({ number: "5550109999", message: "JOIN" }),
+    "SMSTO:5550109999:JOIN"
+  );
+  assert.equal(buildSmsPayload({ message: "no number" }), "");
+});
+
+test("an SMS payload round-trips through the site's own decoder", () => {
+  // The message keeps its colons: everything after the second one is the body.
+  const payload = buildSmsPayload({ number: "+15550109999", message: "Ref: 4021" });
+  const parsed = parseDecodedPayload(payload);
+  assert.equal(parsed.kind, "sms");
+  assert.deepEqual(parsed.fields, [
+    { label: "Number", value: "+15550109999" },
+    { label: "Message", value: "Ref: 4021" },
+  ]);
+});
+
+test("buildWhatsAppPayload wants digits with a country code", () => {
+  assert.equal(buildWhatsAppPayload({ number: "+44 7700 900123" }), "https://wa.me/447700900123");
+  // "00" is the international prefix written the long way, so it goes.
+  assert.equal(buildWhatsAppPayload({ number: "0044 7700 900123" }), "https://wa.me/447700900123");
+  // A single leading zero means the country code is missing; it is kept so the
+  // number fails visibly instead of reaching someone else.
+  assert.equal(buildWhatsAppPayload({ number: "07700 900123" }), "https://wa.me/07700900123");
+  assert.equal(buildWhatsAppPayload({ number: "" }), "");
+});
+
+test("buildWhatsAppPayload percent-encodes the prefilled message", () => {
+  assert.equal(
+    buildWhatsAppPayload({ number: "15550109999", message: "Table for 2?" }),
+    "https://wa.me/15550109999?text=Table%20for%202%3F"
+  );
+});
+
+test("buildGeoPayload defaults to a maps URL and opts in to geo:", () => {
+  assert.equal(
+    buildGeoPayload({ lat: "51.500729", lng: "-0.124625" }),
+    "https://www.google.com/maps/search/?api=1&query=51.500729,-0.124625"
+  );
+  assert.equal(buildGeoPayload({ lat: 51.5, lng: -0.1246, mapsUrl: false }), "geo:51.5,-0.1246");
+});
+
+test("buildGeoPayload trims to six decimals and drops trailing zeros", () => {
+  assert.equal(buildGeoPayload({ lat: "51.5000000", lng: "0.1234567891", mapsUrl: false }),
+    "geo:51.5,0.123457");
+});
+
+test("buildGeoPayload rejects anything that is not a coordinate", () => {
+  assert.equal(buildGeoPayload({ lat: "", lng: "-0.12" }), "");
+  assert.equal(buildGeoPayload({ lat: "abc", lng: "-0.12" }), "");
+  assert.equal(buildGeoPayload({ lat: "91", lng: "0" }), "");      // past the pole
+  assert.equal(buildGeoPayload({ lat: "0", lng: "181" }), "");     // past the date line
+  assert.equal(buildGeoPayload({ lat: "-90", lng: "180", mapsUrl: false }), "geo:-90,180");
+});
+
+test("a geo payload round-trips through the site's own decoder", () => {
+  const parsed = parseDecodedPayload(buildGeoPayload({ lat: "51.5007", lng: "-0.1246", mapsUrl: false }));
+  assert.equal(parsed.kind, "geo");
+  assert.deepEqual(parsed.fields, [
+    { label: "Latitude", value: "51.5007" },
+    { label: "Longitude", value: "-0.1246" },
+  ]);
+});
+
+test("every new payload type encodes and decodes as a real QR code", () => {
+  const payloads = [
+    buildEmailPayload({ to: "hi@example.com", subject: "Booth 214", body: "Send the deck" }),
+    buildSmsPayload({ number: "+15550109999", message: "JOIN" }),
+    buildWhatsAppPayload({ number: "447700900123", message: "Hi!" }),
+    buildGeoPayload({ lat: "51.500729", lng: "-0.124625" }),
+    buildPhonePayload({ number: "+15550109999" }),
+  ];
+  for (const payload of payloads) {
+    assert.ok(payload, "builder returned an empty payload");
+    assert.equal(roundTrip(payload), payload);
+  }
 });

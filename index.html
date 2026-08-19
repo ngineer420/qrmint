@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)</title>
-<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, or plain text — add your logo in the middle, and see it scan-verified before you download. Batch-generate from a CSV. Free, instant, and 100% in your browser.">
+<title>QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Email, SMS &amp; More)</title>
+<meta name="description" content="Mint a QR code for a link, Wi-Fi network, contact card, email, text message, WhatsApp chat, map pin, phone number or plain text — add your logo in the middle, and see it scan-verified before you download. Batch-generate from a CSV. Free, instant, and 100% in your browser.">
 <link rel="canonical" href="https://qrmint.net/">
 <meta name="theme-color" content="#071913">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
-<meta property="og:description" content="Generate QR codes for links, Wi-Fi, contacts and text, with your logo in the centre and every code scan-verified before download. 100% in your browser.">
+<meta property="og:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Email, SMS &amp; More)">
+<meta property="og:description" content="Generate QR codes for links, Wi-Fi, contacts, email, SMS, WhatsApp, locations, phone numbers and text, with your logo in the centre and every code scan-verified before download. 100% in your browser.">
 <meta property="og:url" content="https://qrmint.net/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Text)">
-<meta name="twitter:description" content="QR codes for links, Wi-Fi, contacts and text — with a centre logo, and scan-verified before you download. 100% in your browser.">
+<meta name="twitter:title" content="QR Mint — Free QR Code Generator (URL, Wi-Fi, vCard, Email, SMS &amp; More)">
+<meta name="twitter:description" content="QR codes for links, Wi-Fi, contacts, email, SMS, WhatsApp, locations and phone numbers — with a centre logo, and scan-verified before you download. 100% in your browser.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/styles.css?v=2">
+<link rel="stylesheet" href="/assets/css/styles.css?v=3">
 
 <script type="application/ld+json">
 {
@@ -73,19 +73,30 @@
 <!-- nav:start -->
 <nav class="toolbar" aria-label="Tools">
   <details class="tb-menu">
-    <summary class="tb-trigger" aria-label="All 5 tools">
+    <summary class="tb-trigger" aria-label="All 10 tools">
       <span class="tb-glyph" aria-hidden="true">&#9636;</span>
-      <span class="tb-label">All 5<span class="tb-label-long"> tools</span></span>
+      <span class="tb-label">All 10<span class="tb-label-long"> tools</span></span>
     </summary>
-    <div class="tb-sheet is-flat">
-      <ul>
-        <li><a href="/" aria-current="page">Link &amp; Text QR Code</a></li>
-        <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
-        <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
-        <li><a href="/scan-qr-code/">QR Code Reader</a></li>
-        <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
-      </ul>
-      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+    <div class="tb-sheet">
+      <div class="tb-sheet-cols">
+        <p class="tb-grouplabel" id="tb-g1">Make a code</p>
+        <ul aria-labelledby="tb-g1">
+          <li><a href="/" aria-current="page">Link &amp; Text QR Code</a></li>
+          <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+          <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
+          <li><a href="/email-qr-code/">Email QR Code</a></li>
+          <li><a href="/sms-qr-code/">SMS QR Code</a></li>
+          <li><a href="/whatsapp-qr-code/">WhatsApp QR Code</a></li>
+          <li><a href="/location-qr-code/">Location QR Code</a></li>
+          <li><a href="/phone-number-qr-code/">Phone Number QR Code</a></li>
+        </ul>
+        <p class="tb-grouplabel" id="tb-g2">Read &amp; batch</p>
+        <ul aria-labelledby="tb-g2">
+          <li><a href="/scan-qr-code/">QR Code Reader</a></li>
+          <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+        </ul>
+        <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+      </div>
     </div>
   </details>
   <div class="tb-scrim"></div>
@@ -95,6 +106,9 @@
     <li><a href="/vcard-qr-code/">Contact card</a></li>
     <li><a href="/scan-qr-code/">Scan a code</a></li>
     <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+    <li><a href="/email-qr-code/">Email</a></li>
+    <li><a href="/sms-qr-code/">SMS</a></li>
+    <li><a href="/whatsapp-qr-code/">WhatsApp</a></li>
   </ul>
 </nav>
 <!-- nav:end -->
@@ -153,7 +167,7 @@
     </div>
     <div class="hero-inner">
       <h1>Mint a <span class="mint-of">QR code</span> in your browser</h1>
-      <p class="lede">Links, Wi-Fi logins, contact cards, or plain text — build it, watch it come to life, download it as PNG or SVG. Nothing you type ever leaves this tab.</p>
+      <p class="lede">Links, Wi-Fi logins, contact cards, email drafts, texts, WhatsApp chats, map pins, phone calls or plain text — build it, watch it come to life, download it as PNG or SVG. Nothing you type ever leaves this tab.</p>
       <p class="trust-line">100% client-side<span class="dot">•</span>no sign-up<span class="dot">•</span>works offline once loaded</p>
     </div>
   </div>
@@ -253,6 +267,97 @@
             </div>
           </div>
           <p class="field-hint" style="margin-top:14px;">Scanning this saves a real contact card — name, number, email and all — straight to the phone's address book.</p>
+        </div>
+      </section>
+
+      <!-- ===================== EMAIL ===================== -->
+      <section id="panel-email" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Email</h2>
+          <div class="field">
+            <label for="em-to">To</label>
+            <input type="email" id="em-to" placeholder="hello@example.com" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="em-subject">Subject (optional)</label>
+            <input type="text" id="em-subject" placeholder="Order enquiry" autocomplete="off">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="em-body">Message (optional)</label>
+            <textarea id="em-body" rows="4" placeholder="Hi — I saw your poster and wanted to ask about…"></textarea>
+          </div>
+          <p class="field-hint">Every character of the subject and message is stored in the code itself, so a long message makes a denser one. Keep it to an opening line.</p>
+        </div>
+      </section>
+
+      <!-- ===================== SMS ===================== -->
+      <section id="panel-sms" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Text message</h2>
+          <div class="field">
+            <label for="sms-number">Phone number</label>
+            <input type="tel" id="sms-number" placeholder="+1 555 010 9999" autocomplete="off" spellcheck="false">
+            <p class="field-hint">Spaces, dashes and brackets are stripped. Keep the <code>+</code> and the country code if anyone might scan this from another country.</p>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="sms-message">Message (optional)</label>
+            <textarea id="sms-message" rows="3" placeholder="JOIN — send this to sign up"></textarea>
+          </div>
+          <p class="field-hint">The message is a suggestion, not a commitment: it lands in the compose box and the sender can edit or delete it before sending.</p>
+        </div>
+      </section>
+
+      <!-- ===================== WHATSAPP ===================== -->
+      <section id="panel-whatsapp" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>WhatsApp chat</h2>
+          <div class="field">
+            <label for="wa-number">Phone number with country code</label>
+            <input type="tel" id="wa-number" placeholder="1 555 010 9999" autocomplete="off" spellcheck="false">
+            <p class="field-hint">Digits only in the code: no <code>+</code>, no spaces, no dashes — those are stripped for you. What is <em>not</em> stripped is a national leading zero: UK <code>07700 900123</code> must be entered as <code>44 7700 900123</code>, or the chat opens to the wrong number.</p>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="wa-message">First message (optional)</label>
+            <textarea id="wa-message" rows="3" placeholder="Hi! I'd like to book a table for two."></textarea>
+          </div>
+          <p class="field-hint">The message is prefilled in the chat box, unsent, and the sender can edit it.</p>
+        </div>
+      </section>
+
+      <!-- ===================== LOCATION ===================== -->
+      <section id="panel-geo" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Location</h2>
+          <div class="two-col">
+            <div class="field" style="margin-bottom:0;">
+              <label for="geo-lat">Latitude</label>
+              <input type="text" id="geo-lat" placeholder="51.500729" inputmode="decimal" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="geo-lng">Longitude</label>
+              <input type="text" id="geo-lng" placeholder="-0.124625" inputmode="decimal" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+          <div class="field" style="margin:14px 0 0;">
+            <label for="geo-format">Format</label>
+            <select id="geo-format">
+              <option value="maps" selected>Maps link — opens on iPhone and Android</option>
+              <option value="geo">geo: URI — Android and dedicated scanners</option>
+            </select>
+          </div>
+          <p class="field-hint">Decimal degrees, latitude first. South and west are negative. Six decimals is about 11 cm — more than any phone's GPS can tell apart.</p>
+        </div>
+      </section>
+
+      <!-- ===================== PHONE ===================== -->
+      <section id="panel-phone" class="tab-panel" hidden>
+        <div class="panel">
+          <h2>Phone number</h2>
+          <div class="field" style="margin-bottom:0;">
+            <label for="tel-number">Number to call</label>
+            <input type="tel" id="tel-number" placeholder="+1 555 010 9999" autocomplete="off" spellcheck="false">
+          </div>
+          <p class="field-hint">Spaces, dashes, dots and brackets are stripped; a leading <code>+</code> is kept. Extensions and pause characters are dropped, because dialers disagree about what to do with them.</p>
         </div>
       </section>
 
@@ -558,7 +663,7 @@
 
   <section class="container-narrow explainer">
     <h2>How QR Mint works</h2>
-    <p>QR Mint builds every code with a compact <strong>QR Code encoder that runs entirely inside your browser</strong> — the same Reed–Solomon error correction and masking logic used by professional QR libraries, just with no server round-trip. Type a link, Wi&#8209;Fi network, contact, or note; the preview updates live; hit <strong>Mint PNG</strong> or <strong>Mint SVG</strong> to download. Nothing you enter is ever sent anywhere — close the tab and it's gone.</p>
+    <p>QR Mint builds every code with a compact <strong>QR Code encoder that runs entirely inside your browser</strong> — the same Reed–Solomon error correction and masking logic used by professional QR libraries, just with no server round-trip. Type a link, Wi&#8209;Fi network, contact, email draft, text message, WhatsApp number, map pin, phone number or note; the preview updates live; hit <strong>Mint PNG</strong> or <strong>Mint SVG</strong> to download. Nothing you enter is ever sent anywhere — close the tab and it's gone.</p>
     <h2>Choosing an error-correction level</h2>
     <p>QR codes carry their own repair data, so they can still scan even if part of the code is scuffed, glared, or partly covered by a logo. Higher levels (Q, H) survive more damage but need a denser, larger code for the same content — L or M is plenty for a clean screen or sticker; go higher for anything printed small, laminated, or likely to get scratched.</p>
     <h2>Putting a logo in the middle</h2>
@@ -570,6 +675,9 @@
       <li>Business cards and event badges (contact card mode)</li>
       <li>Cafés, Airbnbs and offices sharing Wi&#8209;Fi (Wi&#8209;Fi mode)</li>
       <li>Posters, packaging and menus linking to a page (link mode)</li>
+      <li>Shop windows and counters that want a call, a text or a WhatsApp chat rather than a click (<a href="/phone-number-qr-code/">phone</a>, <a href="/sms-qr-code/">SMS</a> and <a href="/whatsapp-qr-code/">WhatsApp</a> modes)</li>
+      <li>Trade-show stands where the reply should arrive with the booth number already in the subject (<a href="/email-qr-code/">email mode</a>)</li>
+      <li>Trailheads, site entrances and meeting points with no useful street address (<a href="/location-qr-code/">location mode</a>)</li>
       <li>Anywhere you need a scan-to-read note (text mode)</li>
     </ul>
   </section>
@@ -648,13 +756,13 @@
   </div>
 </footer>
 
-<script src="/assets/js/nav.js?v=2"></script>
+<script src="/assets/js/nav.js?v=3"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 
-<script src="/assets/js/qrcodegen.js?v=2"></script>
-<script src="/assets/js/zipwriter.js?v=2"></script>
-<script src="/assets/js/app.js?v=2"></script>
-<script src="/assets/js/decode.js?v=2"></script>
-<script src="/assets/js/batch.js?v=2"></script>
+<script src="/assets/js/qrcodegen.js?v=3"></script>
+<script src="/assets/js/zipwriter.js?v=3"></script>
+<script src="/assets/js/app.js?v=3"></script>
+<script src="/assets/js/decode.js?v=3"></script>
+<script src="/assets/js/batch.js?v=3"></script>
 </body>
 </html>

@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="Decode a QR code from a photo, a pasted screenshot, or your camera. Nothing is uploaded.">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/assets/css/styles.css?v=2">
+<link rel="stylesheet" href="/assets/css/styles.css?v=3">
 
 <script type="application/ld+json">
 {
@@ -64,19 +64,30 @@
 <!-- nav:start -->
 <nav class="toolbar" aria-label="Tools">
   <details class="tb-menu">
-    <summary class="tb-trigger" aria-label="All 5 tools">
+    <summary class="tb-trigger" aria-label="All 10 tools">
       <span class="tb-glyph" aria-hidden="true">&#9636;</span>
-      <span class="tb-label">All 5<span class="tb-label-long"> tools</span></span>
+      <span class="tb-label">All 10<span class="tb-label-long"> tools</span></span>
     </summary>
-    <div class="tb-sheet is-flat">
-      <ul>
-        <li><a href="/">Link &amp; Text QR Code</a></li>
-        <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
-        <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
-        <li><a href="/scan-qr-code/" aria-current="page">QR Code Reader</a></li>
-        <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
-      </ul>
-      <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+    <div class="tb-sheet">
+      <div class="tb-sheet-cols">
+        <p class="tb-grouplabel" id="tb-g1">Make a code</p>
+        <ul aria-labelledby="tb-g1">
+          <li><a href="/">Link &amp; Text QR Code</a></li>
+          <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+          <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
+          <li><a href="/email-qr-code/">Email QR Code</a></li>
+          <li><a href="/sms-qr-code/">SMS QR Code</a></li>
+          <li><a href="/whatsapp-qr-code/">WhatsApp QR Code</a></li>
+          <li><a href="/location-qr-code/">Location QR Code</a></li>
+          <li><a href="/phone-number-qr-code/">Phone Number QR Code</a></li>
+        </ul>
+        <p class="tb-grouplabel" id="tb-g2">Read &amp; batch</p>
+        <ul aria-labelledby="tb-g2">
+          <li><a href="/scan-qr-code/" aria-current="page">QR Code Reader</a></li>
+          <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+        </ul>
+        <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+      </div>
     </div>
   </details>
   <div class="tb-scrim"></div>
@@ -86,6 +97,9 @@
     <li><a href="/vcard-qr-code/">Contact card</a></li>
     <li><a href="/scan-qr-code/" aria-current="page">Scan a code</a></li>
     <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+    <li><a href="/email-qr-code/">Email</a></li>
+    <li><a href="/sms-qr-code/">SMS</a></li>
+    <li><a href="/whatsapp-qr-code/">WhatsApp</a></li>
   </ul>
 </nav>
 <!-- nav:end -->
@@ -196,12 +210,12 @@
   </div>
 </footer>
 
-<script src="/assets/js/nav.js?v=2"></script>
+<script src="/assets/js/nav.js?v=3"></script>
 <a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
 
 <!-- No qrcodegen.js here: this page only reads codes, it never writes one.
      jsqr.js is fetched by decode.js on first use rather than up front. -->
-<script src="/assets/js/app.js?v=2"></script>
-<script src="/assets/js/decode.js?v=2"></script>
+<script src="/assets/js/app.js?v=3"></script>
+<script src="/assets/js/decode.js?v=3"></script>
 </body>
 </html>

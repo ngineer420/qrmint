@@ -320,12 +320,17 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
   border-radius: 0 0 12px 12px;
   box-shadow: 0 18px 40px -20px rgba(0, 0, 0, .5);
   padding: 14px 4px;
-  columns: 2; column-gap: 24px;
 }
+/* The columns go on the inner wrapper, never on the scrolling .tb-sheet: a
+   multi-column box with a capped block-size does not scroll, it fragments
+   sideways into further columns, so links lay out past the panel's right edge
+   behind a silent horizontal drag. The wrapper has no height cap, so the
+   columns balance at their natural height and the sheet scrolls down past them. */
+.tb-sheet-cols { columns: 2; column-gap: 24px; }
 /* At <= 8 destinations the sheet renders one flat list and the columns move
    onto it; group headings are noise at that size. */
-.tb-sheet.is-flat { columns: 1; }
-.tb-sheet.is-flat ul { columns: 2; column-gap: 24px; }
+.tb-sheet.is-flat .tb-sheet-cols { columns: 1; }
+.tb-sheet.is-flat .tb-sheet-cols ul { columns: 2; column-gap: 24px; }
 .tb-sheet ul { margin: 0 0 12px; padding: 0; list-style: none; break-inside: avoid; }
 .tb-sheet li { break-inside: avoid; }
 .tb-sheet a {
@@ -384,11 +389,14 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
 @media (max-width: 719px) {
   .tb-menu { position: static; }
   .tb-sheet {
-    left: 0; right: 0; width: auto; columns: 1;
+    left: 0; right: 0; width: auto;
     border-width: 1px 0; border-radius: 0;
   }
-  .tb-sheet.is-flat ul { columns: 1; }
+  .tb-sheet-cols,
+  .tb-sheet.is-flat .tb-sheet-cols,
+  .tb-sheet.is-flat .tb-sheet-cols ul { columns: auto; }
   .tb-sheet a { min-height: 44px; padding: 0 16px; }
+  .tb-grouplabel { padding: 0 16px; } /* match the list links' inset */
   /* Anchored to the bar rather than the viewport, so it cannot cover the
      trigger — with JS off, tapping the trigger again is the way out and there
      must be nothing on top of it. Pure CSS, so it works with JS off too. */
@@ -505,6 +513,12 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
   font-weight: 700;
   color: var(--text-dim);
 }
+/* inline-flex outranks the UA's [hidden] rule, exactly as .generator-grid
+   does below, so the Link/Plain-text switch has to be told to go away. It
+   belongs to the "/" destination only, and every other panel — Wi-Fi,
+   contact card, email, SMS, WhatsApp, location, phone, the reader and the
+   CSV tool — sets it hidden. */
+.payload-switch[hidden] { display: none; }
 .payload-switch button:hover { color: var(--text); }
 .payload-switch button[aria-pressed="true"] {
   background: var(--bg-raised);
