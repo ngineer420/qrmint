@@ -53,6 +53,94 @@
     return lines.join("\r\n");
   }
 
+  /* --------------------- phone, email, SMS, chat, geo --------------------- */
+
+  // A single leading "+" and the digits. Spaces, dashes, dots and brackets are
+  // formatting for humans; a tel: or SMSTO: payload wants the bare number, and
+  // a scanner that has to guess where the number ends is a scanner that dials
+  // the wrong one.
+  function normalizePhone(input) {
+    const t = (input || "").trim();
+    if (!t) return "";
+    const plus = t.charAt(0) === "+";
+    const digits = t.replace(/\D/g, "");
+    if (!digits) return "";
+    return (plus ? "+" : "") + digits;
+  }
+
+  function buildPhonePayload(f) {
+    const n = normalizePhone(f && f.number);
+    return n ? "tel:" + n : "";
+  }
+
+  function buildEmailPayload(f) {
+    const o = f || {};
+    // Whitespace inside an address is the one character that reliably ends a
+    // scanner's URI detection early, so it goes before anything else does.
+    const addr = (o.to || "").trim().replace(/\s+/g, "");
+    if (!addr) return "";
+    const params = [];
+    const subject = (o.subject || "").trim();
+    const body = (o.body || "").trim();
+    // encodeURIComponent, not encodeURI: a "&" or "=" inside a subject line
+    // has to survive as data rather than start a second parameter. It also
+    // encodes a space as %20 rather than "+", which every mail client decodes
+    // the same way — "+" is a form-encoding convention some do not undo.
+    if (subject) params.push("subject=" + encodeURIComponent(subject));
+    if (body) params.push("body=" + encodeURIComponent(body));
+    return "mailto:" + addr + (params.length ? "?" + params.join("&") : "");
+  }
+
+  function buildSmsPayload(f) {
+    const o = f || {};
+    const n = normalizePhone(o.number);
+    if (!n) return "";
+    const message = (o.message || "").trim();
+    // SMSTO:number:message — the ZXing convention, which is what QR scanners
+    // and Android's camera read. The message is not escaped because everything
+    // after the second colon is the message, colons included.
+    return message ? "SMSTO:" + n + ":" + message : "SMSTO:" + n;
+  }
+
+  function buildWhatsAppPayload(f) {
+    const o = f || {};
+    // wa.me takes the full international number in digits only: no "+", no
+    // separators. A leading "00" is the international dialling prefix people
+    // type instead of "+", so it goes. A single leading zero is left alone on
+    // purpose: it means the number was typed in national format and is missing
+    // its country code entirely, and quietly deleting the zero would turn a
+    // number that fails loudly into one that reaches a stranger. The form hint
+    // asks for the country code instead.
+    const digits = (o.number || "").replace(/\D/g, "").replace(/^00/, "");
+    if (!digits) return "";
+    const message = (o.message || "").trim();
+    return "https://wa.me/" + digits + (message ? "?text=" + encodeURIComponent(message) : "");
+  }
+
+  // Six decimals is about 11 cm — past the point any consumer GPS can tell the
+  // difference, and short enough to keep the code sparse. Trailing zeros go so
+  // that "51.50" and "51.5" produce the same payload.
+  function formatCoordinate(n) {
+    return String(Number(n.toFixed(6)));
+  }
+
+  function buildGeoPayload(f) {
+    const o = f || {};
+    const rawLat = String(o.lat == null ? "" : o.lat).trim();
+    const rawLng = String(o.lng == null ? "" : o.lng).trim();
+    if (!rawLat || !rawLng) return "";
+    const lat = Number(rawLat);
+    const lng = Number(rawLng);
+    if (!isFinite(lat) || !isFinite(lng)) return "";
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return "";
+    const pair = formatCoordinate(lat) + "," + formatCoordinate(lng);
+    // iOS Camera does nothing with a geo: URI — Apple Maps never registered
+    // the scheme — so a maps URL is the honest cross-platform default and
+    // geo: is the opt-in for an Android-only audience.
+    if (o.mapsUrl === false) return "geo:" + pair;
+    return "https://www.google.com/maps/search/?api=1&query=" + pair;
+  }
+
   /* ------------------------- centre logo geometry ------------------------- */
 
   // The size range the UI offers. Below 10% a logo is unreadable; above 25%
@@ -344,6 +432,13 @@
       buildWifiPayload,
       escapeVCardField,
       buildVCardPayload,
+      normalizePhone,
+      buildPhonePayload,
+      buildEmailPayload,
+      buildSmsPayload,
+      buildWhatsAppPayload,
+      formatCoordinate,
+      buildGeoPayload,
       renderQrToCanvas,
       buildQrSvg,
       contrastRatio,
@@ -647,14 +742,21 @@
   // wifi-qr-code.html) only ever has one #panel-* in the DOM, so detect the
   // mode from the panel itself. The homepage mounts all of them and gets the
   // instant switching below.
-  const panelIdToMode = { "panel-url": "url", "panel-wifi": "wifi", "panel-vcard": "vcard", "panel-text": "text" };
+  const panelIdToMode = {
+    "panel-url": "url", "panel-wifi": "wifi", "panel-vcard": "vcard", "panel-text": "text",
+    "panel-email": "email", "panel-sms": "sms", "panel-whatsapp": "whatsapp",
+    "panel-geo": "geo", "panel-phone": "phone",
+  };
   const presentModePanels = Object.keys(panelIdToMode).filter((id) => document.getElementById(id));
   if (presentModePanels.length === 1) currentMode = panelIdToMode[presentModePanels[0]];
 
   // The reader and the CSV batch tool are whole tools rather than another
   // payload type, so they replace the generator's two-column stage instead of
   // feeding it.
-  const GENERATOR_MODES = { url: true, wifi: true, vcard: true, text: true };
+  const GENERATOR_MODES = {
+    url: true, wifi: true, vcard: true, text: true,
+    email: true, sms: true, whatsapp: true, geo: true, phone: true,
+  };
 
   /* ---- homepage instant tool switch ----
      The toolbar's links are real navigation on every page. The homepage is the
@@ -670,12 +772,19 @@
       "/": "panel-url",
       "/wifi-qr-code": "panel-wifi",
       "/vcard-qr-code": "panel-vcard",
+      "/email-qr-code": "panel-email",
+      "/sms-qr-code": "panel-sms",
+      "/whatsapp-qr-code": "panel-whatsapp",
+      "/location-qr-code": "panel-geo",
+      "/phone-number-qr-code": "panel-phone",
       "/scan-qr-code": "panel-decode",
       "/bulk-qr-codes": "panel-batch",
     };
     const MODE_FOR_PANEL = {
       "panel-url": "url", "panel-wifi": "wifi", "panel-vcard": "vcard",
-      "panel-text": "text", "panel-decode": "decode", "panel-batch": "batch",
+      "panel-text": "text", "panel-email": "email", "panel-sms": "sms",
+      "panel-whatsapp": "whatsapp", "panel-geo": "geo", "panel-phone": "phone",
+      "panel-decode": "decode", "panel-batch": "batch",
     };
     const ALL_PANELS = Object.keys(MODE_FOR_PANEL);
     const panels = {};
@@ -816,6 +925,27 @@
     // Text panel
     const textInput = document.getElementById("text-input");
 
+    // Email panel
+    const emTo = document.getElementById("em-to");
+    const emSubject = document.getElementById("em-subject");
+    const emBody = document.getElementById("em-body");
+
+    // SMS panel
+    const smsNumber = document.getElementById("sms-number");
+    const smsMessage = document.getElementById("sms-message");
+
+    // WhatsApp panel
+    const waNumber = document.getElementById("wa-number");
+    const waMessage = document.getElementById("wa-message");
+
+    // Location panel
+    const geoLat = document.getElementById("geo-lat");
+    const geoLng = document.getElementById("geo-lng");
+    const geoFormat = document.getElementById("geo-format");
+
+    // Phone panel
+    const telNumber = document.getElementById("tel-number");
+
     if (wifiTogglePw) {
       wifiTogglePw.addEventListener("click", () => {
         const show = wifiPassword.type === "password";
@@ -859,6 +989,35 @@
       }
       if (currentMode === "text") {
         return (textInput && textInput.value) || "";
+      }
+      if (currentMode === "email") {
+        return buildEmailPayload({
+          to: emTo && emTo.value,
+          subject: emSubject && emSubject.value,
+          body: emBody && emBody.value,
+        });
+      }
+      if (currentMode === "sms") {
+        return buildSmsPayload({
+          number: smsNumber && smsNumber.value,
+          message: smsMessage && smsMessage.value,
+        });
+      }
+      if (currentMode === "whatsapp") {
+        return buildWhatsAppPayload({
+          number: waNumber && waNumber.value,
+          message: waMessage && waMessage.value,
+        });
+      }
+      if (currentMode === "geo") {
+        return buildGeoPayload({
+          lat: geoLat && geoLat.value,
+          lng: geoLng && geoLng.value,
+          mapsUrl: geoFormat ? geoFormat.value !== "geo" : true,
+        });
+      }
+      if (currentMode === "phone") {
+        return buildPhonePayload({ number: telNumber && telNumber.value });
       }
       // url (default)
       return normalizeUrl(urlInput && urlInput.value);
@@ -1009,6 +1168,11 @@
       if (mode === "wifi") return "Enter a network name to mint your Wi-Fi QR code.";
       if (mode === "vcard") return "Enter at least a name or organization to mint your contact card.";
       if (mode === "text") return "Type something to mint a QR code.";
+      if (mode === "email") return "Enter an email address to mint your code.";
+      if (mode === "sms") return "Enter a phone number to mint your SMS code.";
+      if (mode === "whatsapp") return "Enter a number with its country code to mint your WhatsApp code.";
+      if (mode === "geo") return "Enter a latitude and longitude to mint your location code.";
+      if (mode === "phone") return "Enter a phone number to mint your call code.";
       return "Enter a link to mint your QR code.";
     }
 
@@ -1018,7 +1182,9 @@
     [
       urlInput, wifiSsid, wifiPassword, wifiEnc, wifiHidden,
       vcFirst, vcLast, vcPhone, vcEmail, vcOrg, vcTitle, vcUrl, vcAddress,
-      textInput, optSize, optEcl, optMargin, optFg, optBg,
+      textInput, emTo, emSubject, emBody, smsNumber, smsMessage,
+      waNumber, waMessage, geoLat, geoLng, geoFormat, telNumber,
+      optSize, optEcl, optMargin, optFg, optBg,
     ].forEach((el) => {
       if (!el) return;
       const evt = el.tagName === "SELECT" || el.type === "checkbox" || el.type === "color" ? "input" : "input";

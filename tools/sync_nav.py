@@ -122,27 +122,47 @@ def render_nav(url):
 
     flat = count <= 8
     add('    <div class="tb-sheet%s">' % (" is-flat" if flat else ""))
+    # The columns live on this inner wrapper, never on .tb-sheet itself. A CSS
+    # multi-column box with a capped block-size does not scroll — it fragments
+    # sideways into extra columns, so on an 18-destination sheet 13 of 22 links
+    # landed outside the panel behind a silent horizontal drag, which is the
+    # exact fault this pattern exists to remove. The wrapper is unconstrained,
+    # so the columns lay out at their natural height and .tb-sheet scrolls
+    # vertically past them.
+    add('      <div class="tb-sheet-cols">')
     if flat:
         # Group headings are noise at this size; the whole set fits in one list.
-        add("      <ul>")
+        add("        <ul>")
         for t in tier1:
-            add("        <li>%s</li>" % anchor(t["href"], t["long"], url, owns=owned_urls(t["href"])))
-        add("      </ul>")
+            add("          <li>%s</li>" % anchor(t["href"], t["long"], url, owns=owned_urls(t["href"])))
+        add("        </ul>")
     else:
-        for i, (key, title) in enumerate(D.GROUPS, start=1):
+        for i, group in enumerate(D.GROUPS, start=1):
+            key, title = group[0], group[1]
+            # Optional third element: the category hub this group already has.
+            # Spec: "where a category hub page already exists, the group label
+            # is a link to it". Two-element groups render as plain text, so a
+            # site without hubs produces byte-identical output.
+            hub = group[2] if len(group) > 2 else None
             members = [t for t in tier1 if t["group"] == key]
             if not members:
                 continue
             gid = "tb-g%d" % i
+            # A linked label is still the heading of its list, not a member of
+            # it, so it never takes aria-current — otherwise every group label
+            # pointing at a fragment of the homepage would claim to be the
+            # current page while the visitor is on the homepage.
+            label = ('<a href="%s">%s</a>' % (esc(hub), esc(title))) if hub else esc(title)
             # <p>, not <h2>: these are SEO landing pages and chrome headings
             # would pollute the document outline. AT still announces the list.
-            add('      <p class="tb-grouplabel" id="%s">%s</p>' % (gid, esc(title)))
-            add('      <ul aria-labelledby="%s">' % gid)
+            add('        <p class="tb-grouplabel" id="%s">%s</p>' % (gid, label))
+            add('        <ul aria-labelledby="%s">' % gid)
             for t in members:
-                add("        <li>%s</li>" % anchor(t["href"], t["long"], url, owns=owned_urls(t["href"])))
-            add("      </ul>")
+                add("          <li>%s</li>" % anchor(t["href"], t["long"], url, owns=owned_urls(t["href"])))
+            add("        </ul>")
     for href, text in D.HUBS:
-        add('      <p class="tb-hub">%s</p>' % anchor(href, text + " →", url))
+        add('        <p class="tb-hub">%s</p>' % anchor(href, text + " →", url))
+    add("      </div>")
     add("    </div>")
     add("  </details>")
     # Sibling of the <details>, not a child: the scrim is shown by CSS alone
