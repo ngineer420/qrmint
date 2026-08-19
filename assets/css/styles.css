@@ -937,3 +937,171 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
 ::-webkit-scrollbar-track { background: var(--bg-inset); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* ==========================================================================
+   Print label sheets (/qr-code-labels/)
+   ==========================================================================
+   Everything below is measured in millimetres, because the sheet's whole
+   promise is that the numbers on screen are the numbers on paper. The only
+   px in here is the screen preview's scale, which print undoes.
+
+   The `@page` rule is NOT in this file. It is written into a <style> element
+   by assets/js/print.js every time the paper size changes, because a
+   stylesheet cannot switch `size` on a class and the printer has to be told
+   the same figures the sheet is drawn with. */
+
+.lbl-layout { display: grid; grid-template-columns: 1fr; gap: 18px; align-items: start; }
+@media (min-width: 1000px) {
+  .lbl-layout { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); }
+}
+
+.lbl-preview { min-width: 0; }
+.lbl-preview-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.lbl-preview-head h2 { margin: 0; }
+.lbl-summary { font-size: 12.5px; color: var(--text-faint); margin: 0 0 12px; }
+/* The verdict is centred on its own line under the batch preview elsewhere;
+   here it introduces the sheet, so it reads left-aligned at full width. */
+.lbl-preview .scan-verdict { max-width: none; justify-content: flex-start; text-align: left; margin-bottom: 14px; }
+
+/* The stack of sheets. A frame holds the scaled box so the rest of the page
+   does not have a 297 mm hole punched in it by the transform. */
+.sheet-stack { display: flex; flex-direction: column; gap: 20px; }
+.lbl-sheet-frame { overflow: hidden; }
+.lbl-sheet {
+  position: relative;
+  transform-origin: top left;
+  background: #ffffff;
+  color: #111111;
+  box-shadow: 0 2px 14px rgba(6, 24, 18, .16);
+  /* The sheet is a physical object, so it does not follow the site's theme:
+     a dark-mode preview of a printed page is a lie about what comes out. */
+  color-scheme: light;
+}
+
+.lbl-cell { position: absolute; overflow: hidden; }
+
+.lbl-face {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5mm;
+  padding: 1.5mm;
+  box-sizing: border-box;
+}
+/* Unfolded cells fill the whole cell; folded ones take a half each, and the
+   top half is turned so the tent reads from both sides once folded. */
+.lbl-cell > .lbl-face { top: 0; bottom: 0; }
+.lbl-cell > .lbl-fold ~ .lbl-face { top: 50%; bottom: 0; }
+.lbl-cell > .lbl-face.is-flipped { top: 0; bottom: 50%; transform: rotate(180deg); }
+.lbl-face.is-beside { flex-direction: row; gap: 2mm; justify-content: flex-start; }
+
+.lbl-code { flex: 0 0 auto; }
+.lbl-code svg { display: block; width: 100%; height: 100%; }
+
+.lbl-caption {
+  margin: 0;
+  min-width: 0;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #111111;
+  text-align: center;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  /* Two lines, then it stops. A caption that overflows its label is worse
+     than a caption that is cut, because it lands on the next label. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.lbl-face.is-beside .lbl-caption { text-align: left; -webkit-line-clamp: 3; line-clamp: 3; }
+
+/* Borders rather than background gradients: Chrome's print dialog suppresses
+   background graphics by default and would silently drop a fold line or a cut
+   mark made of gradients. */
+.lbl-fold {
+  position: absolute;
+  left: 2mm;
+  right: 2mm;
+  top: 50%;
+  border-top: 0.2mm dashed #b9b9b9;
+}
+.lbl-cut { position: absolute; width: 3mm; height: 3mm; }
+.lbl-cut-tl { left: 0; top: 0; border-left: 0.2mm solid #b9b9b9; border-top: 0.2mm solid #b9b9b9; }
+.lbl-cut-tr { right: 0; top: 0; border-right: 0.2mm solid #b9b9b9; border-top: 0.2mm solid #b9b9b9; }
+.lbl-cut-bl { left: 0; bottom: 0; border-left: 0.2mm solid #b9b9b9; border-bottom: 0.2mm solid #b9b9b9; }
+.lbl-cut-br { right: 0; bottom: 0; border-right: 0.2mm solid #b9b9b9; border-bottom: 0.2mm solid #b9b9b9; }
+
+/* The calibration rule sits in the page's own bottom margin, below the grid,
+   on every sheet — not behind a checkbox. A sheet without it is a sheet
+   nobody can tell has been scaled. */
+.lbl-cal {
+  position: absolute;
+  left: 8mm;
+  right: 8mm;
+  bottom: 3mm;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 2mm 4mm;
+}
+.lbl-cal svg { display: block; flex: 0 0 auto; }
+.lbl-cal-note {
+  margin: 0;
+  flex: 1 1 60mm;
+  font-size: 2.4mm;
+  line-height: 1.25;
+  color: #444444;
+}
+
+/* --------------------------------------------------------------------------
+   Print. Only the sheets go on paper.
+   -------------------------------------------------------------------------- */
+@media print {
+  /* Structural rather than by name. `.print-keep` marks the chain of ancestors
+     between <body> and the sheets, and everything that is not on that chain
+     goes — so an ad unit, a cookie bar or a browser extension's panel injected
+     as a sibling at any level is hidden without needing a selector of its own. */
+  body > *:not(.print-keep),
+  .print-keep > *:not(.print-keep):not(#print-sheets) { display: none !important; }
+  .print-keep {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .sheet-stack { display: block !important; gap: 0 !important; }
+  .lbl-sheet-frame { width: auto !important; height: auto !important; overflow: visible !important; }
+  .lbl-sheet {
+    transform: none !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+  .lbl-sheet:last-child { break-after: auto; page-break-after: auto; }
+
+  /* Belt and braces for a browser that decides the QR's own white plate is a
+     background: without it a code can print as black-on-nothing. */
+  .lbl-sheet, .lbl-sheet * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

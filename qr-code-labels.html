@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Labels — Printable A4 &amp; Letter Sheets | QR Mint</title>
+<meta name="description" content="Lay QR codes out on a printable sheet with captions — table tents, place cards, Avery address labels or a 30-up sticker grid, on A4 or US Letter. Calibrated, scan-verified, nothing uploaded.">
+<link rel="canonical" href="https://qrmint.net/qr-code-labels/">
+<meta name="theme-color" content="#071913">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="QR Code Labels — Printable A4 &amp; Letter Sheets">
+<meta property="og:description" content="Table tents, place cards, Avery address labels or a 30-up sticker grid. Captioned, calibrated and scan-verified before you print thirty of them.">
+<meta property="og:url" content="https://qrmint.net/qr-code-labels/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QR Code Labels — Printable A4 &amp; Letter Sheets">
+<meta name="twitter:description" content="Table tents, place cards, Avery address labels or a 30-up sticker grid. Captioned, calibrated and scan-verified before you print thirty of them.">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/styles.css?v=4">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "QR Code Label Sheets — QR Mint",
+  "url": "https://qrmint.net/qr-code-labels/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free browser-based QR code label sheet layout. Table tents, place cards, Avery address labels and a 30-up sticker grid on A4 or US Letter, printed through the browser's own print dialog."
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why is there a ruler printed at the bottom of the sheet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because your print dialog can scale the page without telling you, and a few percent is the difference between a grid that lands on die-cut label stock and one that walks off it by the bottom row. The rule is exactly 100 mm end to end and the dashed mark beside it is 4 inches, which is 1.6 mm further. Measure the rule on the first sheet. If it comes out short, the print dialog scaled the page: set it to 100% or Actual size rather than Fit to page, and print again."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which print dialog settings should I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In Chrome, open More settings and set Scale to Default or Custom 100, and Margins to None. In Safari, untick Scale to fit and set the scale to 100%, with Print Backgrounds on. Both browsers default to fitting the page to their own printable area, which shrinks it by roughly four to six percent. The page tells the printer the exact sheet size and puts every margin inside the layout itself, so it needs no help from the dialog."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a PDF or a special file?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The sheet is the page itself, so Print sends it straight to the printer and Save as PDF in the same dialog gives you a PDF at no extra step. Nothing is uploaded, no library is loaded, and the codes are drawn as vectors so they stay crisp at any size your printer works at."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will these line up with Avery label sheets?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The address-label preset uses the published geometry for Avery 5160 on US Letter, which is 30 labels of 2.625 by 1 inch, and Avery L7160 on A4, which is 21 labels of 63.5 by 38.1 mm. That is the correct starting point, but no browser can promise alignment on die-cut stock, because your printer's own paper handling shifts the sheet by a millimetre or two. Print one sheet on plain paper, hold it against the label stock, and check the rule."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are the codes checked before I print thirty of them?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every distinct code on the sheet is read back through the same decoder the scan tool uses, and the verdict appears above the preview. The sheet also reports the smallest printed module in millimetres and warns below about 0.4 mm, which is roughly where ordinary laser toner spread and a phone camera stop agreeing about where a module edge is."
+      }
+    }
+  ]
+}
+</script>
+
+<script>
+(function () {
+  var t = localStorage.getItem("qrmint-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+
+<style id="lbl-page-rule">@page { size: 210mm 297mm; margin: 0; }</style>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="QR Mint home">
+      <svg class="brand-icon" width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#071913"/>
+        <rect x="6" y="6" width="20" height="20" rx="4" fill="#2DFFC0"/>
+        <rect x="10" y="10" width="12" height="12" rx="2.4" fill="#071913"/>
+        <rect x="13" y="13" width="6" height="6" rx="1.2" fill="#2DFFC0"/>
+      </svg>
+      <span class="brand-mark">QR<span class="mint-of">mint</span></span>
+    </a>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<!-- nav:start -->
+<nav class="toolbar" aria-label="Tools">
+  <details class="tb-menu">
+    <summary class="tb-trigger" aria-label="All 11 tools">
+      <span class="tb-glyph" aria-hidden="true">&#9636;</span>
+      <span class="tb-label">All 11<span class="tb-label-long"> tools</span></span>
+    </summary>
+    <div class="tb-sheet">
+      <div class="tb-sheet-cols">
+        <p class="tb-grouplabel" id="tb-g1">Make a code</p>
+        <ul aria-labelledby="tb-g1">
+          <li><a href="/">Link &amp; Text QR Code</a></li>
+          <li><a href="/wifi-qr-code/">Wi‑Fi QR Code</a></li>
+          <li><a href="/vcard-qr-code/">vCard QR Code</a></li>
+          <li><a href="/email-qr-code/">Email QR Code</a></li>
+          <li><a href="/sms-qr-code/">SMS QR Code</a></li>
+          <li><a href="/whatsapp-qr-code/">WhatsApp QR Code</a></li>
+          <li><a href="/location-qr-code/">Location QR Code</a></li>
+          <li><a href="/phone-number-qr-code/">Phone Number QR Code</a></li>
+        </ul>
+        <p class="tb-grouplabel" id="tb-g2">Read, batch &amp; print</p>
+        <ul aria-labelledby="tb-g2">
+          <li><a href="/scan-qr-code/">QR Code Reader</a></li>
+          <li><a href="/bulk-qr-codes/">Bulk QR Codes (CSV)</a></li>
+          <li><a href="/qr-code-labels/" aria-current="page">Printable Label Sheets</a></li>
+        </ul>
+        <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
+      </div>
+    </div>
+  </details>
+  <div class="tb-scrim"></div>
+  <ul class="tb-rail">
+    <li><a href="/">Link</a></li>
+    <li><a href="/wifi-qr-code/">Wi‑Fi</a></li>
+    <li><a href="/vcard-qr-code/">Contact card</a></li>
+    <li><a href="/scan-qr-code/">Scan a code</a></li>
+    <li><a href="/bulk-qr-codes/">Batch CSV</a></li>
+    <li><a href="/email-qr-code/">Email</a></li>
+    <li><a href="/sms-qr-code/">SMS</a></li>
+    <li><a href="/whatsapp-qr-code/">WhatsApp</a></li>
+  </ul>
+</nav>
+<!-- nav:end -->
+<main id="main" class="print-keep">
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>QR code <span class="mint-of">label sheets</span></h1>
+      <p class="lede">Lay your codes out on a real sheet with captions, then print it from this tab. Table tents, place cards, Avery address labels or a 30&#8209;up sticker grid — on A4 or US&nbsp;Letter, with a calibration rule so you find out about a scaled print before you have wasted thirty labels.</p>
+      <p class="trust-line">100% client-side<span class="dot">•</span>no PDF library<span class="dot">•</span>Save as PDF from the same dialog</p>
+    </div>
+  </div>
+
+  <div id="labels-tool" class="lbl-layout print-keep">
+    <div>
+      <div class="panel">
+        <h2>Sheet</h2>
+        <div class="field">
+          <label for="lbl-preset">Layout</label>
+          <select id="lbl-preset">
+            <option value="table-tents" selected>Table tents — 2 per page, folded</option>
+            <option value="place-cards">Place cards — 6 per page, folded</option>
+            <option value="address-labels">Address labels — Avery 5160 / L7160</option>
+            <option value="sticker-grid">Sticker grid — 30 per page, cut marks</option>
+          </select>
+          <p class="field-hint" id="lbl-preset-blurb"></p>
+        </div>
+        <div class="two-col">
+          <div class="field" style="margin-bottom:0;">
+            <label for="lbl-paper">Paper</label>
+            <select id="lbl-paper">
+              <option value="a4" selected>A4 — 210 × 297 mm</option>
+              <option value="letter">US Letter — 8.5 × 11 in</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="lbl-ecl">Error correction</label>
+            <select id="lbl-ecl">
+              <option value="L">L — ~7%</option>
+              <option value="M" selected>M — ~15%</option>
+              <option value="Q">Q — ~25%</option>
+              <option value="H">H — ~30%</option>
+            </select>
+          </div>
+        </div>
+        <p class="field-hint" style="margin-top:12px;">Printed codes are black on white with a four-module quiet zone, and neither is adjustable here on purpose: a coloured code on a home laser and a code printed hard against its neighbour are the two ways a sheet that looked fine on screen fails on paper.</p>
+      </div>
+
+      <div class="panel">
+        <h2>What to print</h2>
+        <div class="checkbox-row">
+          <input type="radio" name="lbl-source" id="lbl-source-one" value="one" checked>
+          <label for="lbl-source-one">One code, repeated</label>
+        </div>
+        <div class="checkbox-row">
+          <input type="radio" name="lbl-source" id="lbl-source-csv" value="csv">
+          <label for="lbl-source-csv">A CSV — one code per row</label>
+        </div>
+
+        <div id="lbl-one-panel">
+          <div class="field">
+            <label for="lbl-payload">What the code holds</label>
+            <textarea id="lbl-payload" rows="3" spellcheck="false" placeholder="https://example.com/menu">WIFI:T:WPA;S:Guest Wi-Fi;P:flatwhite;;</textarea>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="lbl-count">How many</label>
+            <input type="number" id="lbl-count" min="1" max="300" value="2">
+          </div>
+        </div>
+
+        <div id="lbl-csv-panel" hidden>
+          <div class="drop-zone" id="lbl-csv-drop">
+            <p>Drop a .csv file here</p>
+            <button type="button" class="primary">Choose a file</button>
+            <input type="file" id="lbl-csv-file" accept=".csv,text/csv,text/plain" hidden>
+          </div>
+          <div class="field" style="margin-top:14px;">
+            <label for="lbl-csv">…or paste the rows</label>
+            <textarea id="lbl-csv" rows="7" spellcheck="false" placeholder="label,data&#10;Table 1,https://example.com/menu&#10;Table 2,https://example.com/menu?t=2"></textarea>
+          </div>
+          <button type="button" class="icon-btn" id="lbl-csv-sample">Load a sample CSV</button>
+          <div class="two-col" style="margin-top:14px;">
+            <div class="field" style="margin-bottom:0;">
+              <label for="lbl-delimiter">Delimiter</label>
+              <select id="lbl-delimiter">
+                <option value="auto" selected>Detect automatically</option>
+                <option value="comma">Comma</option>
+                <option value="semicolon">Semicolon</option>
+                <option value="tab">Tab</option>
+                <option value="pipe">Pipe</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label for="lbl-data-col">Code data</label>
+              <select id="lbl-data-col"></select>
+            </div>
+          </div>
+          <div class="field" style="margin-top:14px;margin-bottom:0;">
+            <label for="lbl-label-col">Caption column</label>
+            <select id="lbl-label-col"></select>
+          </div>
+          <div class="checkbox-row" style="margin-top:14px;">
+            <input type="checkbox" id="lbl-header" checked>
+            <label for="lbl-header">First row is a header</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Caption</h2>
+        <div class="field" style="margin-bottom:0;">
+          <label for="lbl-caption">Text under every code</label>
+          <input type="text" id="lbl-caption" placeholder="Scan for the menu" autocomplete="off">
+          <p class="field-hint">Captions resolve in one order and only one: the CSV's caption column first, then this box, then the network name if the code is a Wi&#8209;Fi payload. Anything else prints without a caption rather than with a guess.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lbl-preview print-keep">
+      <div class="lbl-preview-head">
+        <h2>Sheet preview</h2>
+        <button type="button" class="primary" id="lbl-print">Print this sheet</button>
+      </div>
+      <p class="scan-verdict" id="lbl-verify" hidden></p>
+      <p class="lbl-summary" id="lbl-summary"></p>
+      <div id="print-sheets" class="sheet-stack" aria-label="Print preview"></div>
+    </div>
+  </div>
+
+  <section class="container-narrow">
+    <h2>Before you print thirty of them</h2>
+    <p>Every sheet carries a <strong>100&nbsp;mm rule</strong> across the bottom margin, with a dashed mark at four inches sitting 1.6&nbsp;mm past the end of it. That rule is the whole reason this page is trustworthy. A browser can tell the printer the exact sheet size, position every cell to a tenth of a millimetre and still have the print dialog quietly shrink the lot by four to six percent to clear the printer's unprintable edge — and nothing on screen will hint at it. Print one sheet, put a ruler on it, and you know.</p>
+    <p>If the rule measures 100&nbsp;mm, everything else on the sheet is right too. If it measures 95 or 96, the dialog scaled the page and the fix is in the dialog, not here.</p>
+
+    <h3>Chrome</h3>
+    <p>Open <strong>More settings</strong>. Set <strong>Scale</strong> to <em>Default</em> or <em>Custom&nbsp;100</em>, and <strong>Margins</strong> to <em>None</em>. Leave <strong>Background graphics</strong> on — the codes themselves are vectors and print either way, but the fold lines and cut marks are cleaner with it on. Chrome's <em>Default</em> scale is not always 100 on every printer driver, so if the rule measures short, choose Custom and type 100.</p>
+
+    <h3>Safari</h3>
+    <p>Untick <strong>Scale to fit</strong> and set the scale to <strong>100%</strong>. Turn on <strong>Print backgrounds</strong>. Safari's default is to fit the page to the printer's imageable area, which is the single most common reason a label grid comes out a few millimetres short across a sheet.</p>
+
+    <h3>Save as PDF</h3>
+    <p>Both browsers offer <em>Save as PDF</em> as a destination in the same dialog, so a PDF costs nothing extra and no PDF library is loaded on this page. The same scale setting applies — a PDF saved from a scaled print is scaled.</p>
+
+    <h2>The four layouts</h2>
+    <p><strong>Table tents</strong> put two folded tents on a sheet. Each tent prints the code twice, the top half turned upside down, so once you fold it along the dashed line it reads from both sides of the table. That is the layout for a restaurant menu code, a Wi&#8209;Fi code on a guest-room desk or a payment code at a market stall.</p>
+    <p><strong>Place cards</strong> are the same idea at six per sheet, caption first: a name, a table number or a shelf label with the code beneath it.</p>
+    <p><strong>Address labels</strong> follow the published geometry of Avery&nbsp;5160 on US&nbsp;Letter — 30 labels of 2.625&nbsp;×&nbsp;1&nbsp;inch, 3 across and 10 down — and Avery&nbsp;L7160 on A4, which is 21 labels of 63.5&nbsp;×&nbsp;38.1&nbsp;mm, 3 across and 7 down. The code sits on the left of each label with the caption beside it, and no cut marks are drawn because the stock is already die-cut. This is the preset where calibration decides the outcome: a 96% print is fine on the first row and half a label out by the tenth.</p>
+    <p><strong>Sticker grid</strong> is 30 codes on plain paper with light corner cut marks, for asset tags, ticket stubs, seed-tray labels and anything you will cut with a guillotine rather than peel.</p>
+    <p>There is deliberately no custom rows-and-columns builder. It is the control that makes print layout fragile and it is not what stops a sheet from working — alignment is.</p>
+
+    <h2>Where the codes come from</h2>
+    <p>Two sources. <strong>One code, repeated</strong> takes a single payload and fills the sheet with it, which is what a Wi&#8209;Fi code, a review link or a menu code actually needs. <strong>A CSV</strong> reads one code per row through the same RFC&nbsp;4180 parser and the same delimiter detection the <a href="/bulk-qr-codes/">bulk CSV tool</a> uses, so a file that batches cleanly there lays out cleanly here — this page is the half of that job that used to end in a ZIP of loose PNGs and a trip to Word.</p>
+    <p>Every distinct code on the sheet is read back through the decoder before you print, and the verdict sits above the preview. The sheet also reports the <strong>smallest printed module</strong> in millimetres, and warns below about 0.4&nbsp;mm — the point where ordinary toner spread and a phone camera stop agreeing about where a module edge is. A code can read back perfectly on screen and still be too small to work on paper, and that is a fact only a print page can tell you.</p>
+
+    <h2>Questions</h2>
+    <div class="faq-item">
+      <h3>Why is there a ruler printed at the bottom of the sheet?</h3>
+      <p>Because your print dialog can scale the page without telling you, and a few percent is the difference between a grid that lands on die-cut label stock and one that walks off it by the bottom row. The rule is exactly 100&nbsp;mm end to end and the dashed mark beside it is 4&nbsp;inches, which is 1.6&nbsp;mm further. Measure the rule on the first sheet. If it comes out short, the print dialog scaled the page: set it to 100% or <em>Actual size</em> rather than <em>Fit to page</em>, and print again.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Do I need a PDF or a special file?</h3>
+      <p>No. The sheet <em>is</em> the page, so Print sends it straight to the printer and <em>Save as PDF</em> in the same dialog gives you a PDF at no extra step. Nothing is uploaded, no library is loaded, and the codes are drawn as vectors so they stay crisp at whatever resolution your printer works at.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Will these line up with Avery label sheets?</h3>
+      <p>The address-label preset starts from the published geometry, which is the correct starting point — but no browser can promise alignment on die-cut stock, because your printer's own paper handling shifts the sheet by a millimetre or two of its own. Print one sheet on plain paper, hold it up against the label stock, and check the rule. That is a minute against a wasted sheet of thirty.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I put a logo in the middle of the codes?</h3>
+      <p>Not on this page. A logo needs the error-correction level locked to H and a verified render per code, which the <a href="/">generator</a> and the <a href="/bulk-qr-codes/">bulk tool</a> both do properly. Design the code there, check it is scan-verified, then bring the data here to lay it out.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What size should a printed QR code be?</h3>
+      <p>The usual rule of thumb is that the code should be about a tenth of the distance it will be scanned from — 3&nbsp;cm for arm's length, 10&nbsp;cm for a code on a wall across a room. The harder limit is the module: below roughly 0.4&nbsp;mm per module a home laser printer's toner spread starts closing the gaps, and this page tells you that figure for the sheet you are about to print.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>© <span id="year"></span> qrmint.net</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/articles/">Guides</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/nav.js?v=3"></script>
+<a href="https://erabb.it" class="erabbit-mark" aria-label="erabb.it"><img src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐇</text></svg>" width="10" height="10" alt=""></a>
+
+<script src="/assets/js/qrcodegen.js?v=3"></script>
+<script src="/assets/js/app.js?v=3"></script>
+<script src="/assets/js/batch.js?v=3"></script>
+<script src="/assets/js/print.js?v=1"></script>
+</body>
+</html>
