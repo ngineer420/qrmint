@@ -5,7 +5,10 @@ copies verbatim. Nothing here is computed at runtime by the browser: sync_nav
 renders it into the static HTML of every page.
 
 Tier rule (portfolio spec, ngineer420.github.io#13): a page is tier 1 only if it
-answers a *different question*. qrmint has ten such pages and no tier-2 family:
+answers a *different question*. qrmint has eleven such pages and no tier-2
+family. Laying a sheet out is squarely a different question from minting a
+code — it is about paper, not payloads — which is why /qr-code-labels/ is a
+destination rather than an option on the batch tool:
 every generator is a genuinely different payload, not one generator with an
 argument baked in — a mailto: draft, an SMS with a body, a wa.me hand-off, a
 map pin and a dialer prefill are five different scanner behaviours, not five
@@ -24,7 +27,7 @@ for "/" and the choice between the two lives in the generator's own control
 panel, where a parameter belongs.
 """
 
-# Noun used in the menu trigger: "All 10 tools".
+# Noun used in the menu trigger: "All 11 tools".
 NOUN = "tools"
 
 # Tier-1 tools, in rail order.
@@ -42,15 +45,16 @@ TOOLS = [
     {"href": "/whatsapp-qr-code/",     "label": "WhatsApp",  "long": "WhatsApp QR Code",     "group": "make", "tier": 1},
     {"href": "/location-qr-code/",     "label": "Location",  "long": "Location QR Code",     "group": "make", "tier": 1},
     {"href": "/phone-number-qr-code/", "label": "Phone call","long": "Phone Number QR Code", "group": "make", "tier": 1},
+    {"href": "/qr-code-labels/",       "label": "Label sheets","long": "Printable Label Sheets", "group": "read", "tier": 1},
 ]
 
 # Sheet groups, in order. The site is past eight destinations, so these are
-# what the sheet renders: the eight generators under one label, the reader and
-# the CSV batch tool — which consume codes rather than mint them — under the
-# other.
+# what the sheet renders: the eight generators under one label, and under the
+# other the three pages that do something *with* codes rather than mint them —
+# the reader, the CSV batch tool and the label sheets it now feeds.
 GROUPS = [
     ("make", "Make a code"),
-    ("read", "Read & batch"),
+    ("read", "Read, batch & print"),
 ]
 
 # One hub link at the bottom of the sheet. The four guides were previously

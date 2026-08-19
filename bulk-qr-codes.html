@@ -64,9 +64,9 @@
 <!-- nav:start -->
 <nav class="toolbar" aria-label="Tools">
   <details class="tb-menu">
-    <summary class="tb-trigger" aria-label="All 10 tools">
+    <summary class="tb-trigger" aria-label="All 11 tools">
       <span class="tb-glyph" aria-hidden="true">&#9636;</span>
-      <span class="tb-label">All 10<span class="tb-label-long"> tools</span></span>
+      <span class="tb-label">All 11<span class="tb-label-long"> tools</span></span>
     </summary>
     <div class="tb-sheet">
       <div class="tb-sheet-cols">
@@ -81,10 +81,11 @@
           <li><a href="/location-qr-code/">Location QR Code</a></li>
           <li><a href="/phone-number-qr-code/">Phone Number QR Code</a></li>
         </ul>
-        <p class="tb-grouplabel" id="tb-g2">Read &amp; batch</p>
+        <p class="tb-grouplabel" id="tb-g2">Read, batch &amp; print</p>
         <ul aria-labelledby="tb-g2">
           <li><a href="/scan-qr-code/">QR Code Reader</a></li>
           <li><a href="/bulk-qr-codes/" aria-current="page">Bulk QR Codes (CSV)</a></li>
+          <li><a href="/qr-code-labels/">Printable Label Sheets</a></li>
         </ul>
         <p class="tb-hub"><a href="/articles/">All 4 QR code guides →</a></p>
       </div>
@@ -272,6 +273,8 @@ Front door,WIFI:T:WPA;S:Cafe Guest;P:flatwhite;;</pre>
       <li><strong>Print runs</strong> — pick SVG and every code stays razor-sharp at any size</li>
       <li><strong>Campaign links</strong> — a row per channel, each with its own tracking parameters</li>
     </ul>
+    <h2>Printing the batch</h2>
+    <p>A ZIP of loose PNGs is the right output when each code goes somewhere different — a per-attendee badge, a per-SKU record, an email to a client. When the whole batch is destined for one sheet of paper, hand-placing thirty images in Word is the wrong end of the job: <a href="/qr-code-labels/">print the labels instead</a>. The same CSV, the same parser and the same delimiter detection lay the codes out on A4 or US Letter as table tents, place cards, Avery 5160 / L7160 address labels or a 30&#8209;up sticker grid, captioned from the column you already have, with a calibration rule on every sheet so a scaled print shows up before you have wasted the stock.</p>
     <h2>How the ZIP is built</h2>
     <p>Each row is encoded into a QR code and drawn in your browser, then the whole set is packed into a ZIP archive by roughly a hundred lines of JavaScript on this page — no upload, no server, no third-party zip service. PNGs are stored rather than re-compressed inside the archive, because a PNG is already compressed and squeezing it again would save almost nothing.</p>
     <h2>Frequently asked questions</h2>

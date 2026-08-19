@@ -146,6 +146,15 @@
     module.exports = { detectDelimiter, parseCsv, sanitizeFilename, uniqueNames, buildBatchItems, MAX_ROWS };
   }
 
+  /* This is the site's only CSV reader, and /qr-code-labels/ needs the same
+     one — a second parser would mean a row that batches cleanly and prints
+     wrong. Published before the DOM wiring below, so a page that loads
+     batch.js purely for the parser gets it even though the batch tool's own
+     markup is nowhere on it. */
+  if (typeof window !== "undefined") {
+    window.qrmintCsv = { detectDelimiter, parseCsv, sanitizeFilename, uniqueNames, buildBatchItems, MAX_ROWS };
+  }
+
   /* ======================================================================
      Browser wiring
      ====================================================================== */
