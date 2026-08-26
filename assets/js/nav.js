@@ -60,3 +60,13 @@
     });
   }
 })();
+
+/* Offline: register the service worker that tools/build_sw.py writes to
+   /sw.js. The worker precaches every page and asset, so the site loads with
+   no network. Registration waits for `load` so it never competes with the
+   page's own requests. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js");
+  });
+}
