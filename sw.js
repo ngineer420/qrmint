@@ -2,7 +2,7 @@
    Run `python3 tools/build_sw.py` to rewrite it after any page or asset
    change. `python3 tools/build_sw.py --check` reports a stale file. */
 
-const VERSION = "70902ad9aba8";
+const VERSION = "c6884c0645a4";
 const CACHE = "qrmint-" + VERSION;
 const PRECACHE = [
   "/",
@@ -23,16 +23,14 @@ const PRECACHE = [
   "/articles/qr-code-design-tips-that-still-scan.html",
   "/privacy/",
   "/terms/",
-  "/assets/css/styles.css?v=3",
+  "/assets/css/styles.css?v=4",
   "/assets/js/nav.js?v=4",
   "/assets/js/qrcodegen.js?v=3",
   "/assets/js/zipwriter.js?v=3",
   "/assets/js/app.js?v=3",
   "/assets/js/decode.js?v=3",
   "/assets/js/batch.js?v=3",
-  "/assets/css/styles.css?v=4",
   "/assets/js/print.js?v=1",
-  "/assets/js/jsqr.js",
 ];
 
 // Install: fill the new cache from the network, not from the HTTP cache.
