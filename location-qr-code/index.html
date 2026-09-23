@@ -44,6 +44,11 @@
 </script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7560786263587509" crossorigin="anonymous"></script>
+<!-- schema:start -->
+<meta property="og:site_name" content="qrmint.net">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://qrmint.net/"},{"@type":"ListItem","position":2,"name":"Location QR code generator","item":"https://qrmint.net/location-qr-code/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I use an address instead of coordinates?","acceptedAnswer":{"@type":"Answer","text":"Not in this form \u2014 it encodes the coordinate pair, which is the part that cannot be ambiguous. If the address is the point, encode a maps search link with the link QR code instead."}},{"@type":"Question","name":"Can I put a name on the pin?","acceptedAnswer":{"@type":"Answer","text":"Some map apps show a label passed with the coordinates and others ignore it, so this tool leaves it out rather than shipping something that appears on one phone and not the next. The pin lands in the right place on every platform; the sign next to the code can carry the name."}},{"@type":"Question","name":"Which one works offline?","acceptedAnswer":{"@type":"Answer","text":"The geo: URI, on a phone whose map app has the area downloaded \u2014 the payload is handed straight to that app. The maps link needs a connection, because it is a web address first."}},{"@type":"Question","name":"Why does my code look denser than the Wi-Fi one?","acceptedAnswer":{"@type":"Answer","text":"A maps link carries a domain, a path and a query string around your coordinates. Switch the format to geo: and the same pin encodes in less than half the characters \u2014 just check who is scanning it first."}}]}</script>
+<!-- schema:end -->
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -275,6 +280,19 @@
 </main>
 
 <footer class="site-footer">
+
+  <!-- peers:start -->
+  <nav class="peer-sites" aria-label="Related tools">
+    <span class="peer-sites-label">Related tools</span>
+    <ul>
+      <li><a href="https://photoshrink.net/">Resize, compress and convert images</a><span class="peer-domain">photoshrink.net</span></li>
+      <li><a href="https://inascii.com/">ASCII art and text banners</a><span class="peer-domain">inascii.com</span></li>
+      <li><a href="https://gamutlens.com/">Color pickers, palettes and contrast</a><span class="peer-domain">gamutlens.com</span></li>
+      <li><a href="https://paperprintouts.com/">Printable graph, lined and staff paper</a><span class="peer-domain">paperprintouts.com</span></li>
+    </ul>
+  </nav>
+  <p class="footer-contact">Questions or a problem with a code? <a href="mailto:hello&#64;goodbotbad.bot">hello&#64;goodbotbad.bot</a></p>
+  <!-- peers:end -->
   <div class="footer-inner">
     <div>© <span id="year"></span> qrmint.net</div>
     <div class="footer-links">

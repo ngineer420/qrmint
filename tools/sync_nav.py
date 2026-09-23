@@ -205,8 +205,39 @@ def render_footernav(url):
     return "\n".join(out)
 
 
+def render_peers(url):
+    """The related-tools block: the sibling sites in the same portfolio.
+
+    Four links, chosen per site in nav_data.PEERS. Each one says what the site
+    does before it says the domain, because "inascii.com" tells a reader
+    nothing and "ASCII art and text banners" tells them everything. The block
+    never marks a current page: every href points off this origin.
+    """
+    peers = getattr(D, "PEERS", None)
+    if not peers:
+        return ""
+    out = ['<nav class="peer-sites" aria-label="Related tools">',
+           '  <span class="peer-sites-label">Related tools</span>',
+           "  <ul>"]
+    for href, text, domain in peers:
+        out.append('    <li><a href="%s">%s</a><span class="peer-domain">%s</span></li>'
+                   % (esc(href), esc(text), esc(domain)))
+    out += ["  </ul>", "</nav>"]
+
+    contact = getattr(D, "CONTACT", None)
+    if contact:
+        local, domain, lead = contact
+        # `&#64;` is written raw, not through esc(), because esc() would turn
+        # the `&` into `&amp;` and the address would render as literal text.
+        addr = "%s&#64;%s" % (esc(local), esc(domain))
+        out.append('<p class="footer-contact">%s <a href="mailto:%s">%s</a></p>'
+                   % (esc(lead), addr, addr))
+    return "\n".join(out)
+
+
 RENDERERS = {
     "nav": render_nav,
+    "peers": render_peers,
     "sizechips": render_sizechips,
     "footernav": render_footernav,
 }
