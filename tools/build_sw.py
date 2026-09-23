@@ -28,7 +28,16 @@ OUT = ROOT / "sw.js"
 
 # Same-origin scripts that a page loads at run time with `s.src = ...`, not
 # with a <script> tag. The HTML scan cannot see them. Each entry must exist.
-DYNAMIC_SCRIPTS = ["/assets/js/jsqr.js"]
+#
+# `/assets/js/jsqr.js` is deliberately NOT here. It is 252 KB, and
+# `assets/js/decode.js` loads it only when a visitor asks to scan a code
+# (`ensureDecoder()`). Precaching it put that 252 KB into the install of every
+# first-time visitor, including the visitors who only generate a code, which
+# cancelled the lazy load. The fetch handler already falls through to the
+# network for a non-navigate request, so `ensureDecoder()` still gets the file
+# on demand. The cost is that scanning does not work offline until the decoder
+# has been fetched once.
+DYNAMIC_SCRIPTS = []
 
 LINK_RE = re.compile(r'<link\b[^>]*\brel="stylesheet"[^>]*\bhref="([^"]+)"', re.I)
 SCRIPT_RE = re.compile(r'<script\b[^>]*\bsrc="([^"]+)"', re.I)
