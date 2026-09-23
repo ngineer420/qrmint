@@ -11,9 +11,9 @@
   --border-soft: #e0f2e8;
   --text: #0b2119;
   --text-dim: #3e5f53;
-  --text-faint: #7c9a8c;
+  --text-faint: #5b7569;
   --mint: #0fb883;
-  --mint-dim: #0a9a6d;
+  --mint-dim: #087f5a;
   --mint-bright: #17d99b;
   --mint-contrast: #04241a;
   --copper: #b97a35;
@@ -38,7 +38,7 @@
   --border-soft: #163829;
   --text: #eafbf3;
   --text-dim: #9fc9b8;
-  --text-faint: #5e8977;
+  --text-faint: #679783;
   --mint: #2dffc0;
   --mint-dim: #1fe0a8;
   --mint-bright: #6bffd6;
@@ -58,7 +58,7 @@
     --border-soft: #163829;
     --text: #eafbf3;
     --text-dim: #9fc9b8;
-    --text-faint: #5e8977;
+    --text-faint: #679783;
     --mint: #2dffc0;
     --mint-dim: #1fe0a8;
     --mint-bright: #6bffd6;
@@ -126,8 +126,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
   outline-offset: 2px;
 }
 button.primary {
-  background: linear-gradient(135deg, var(--mint-bright), var(--mint-dim));
-  border-color: var(--mint-dim);
+  background: linear-gradient(135deg, var(--mint-bright), var(--mint));
+  border-color: var(--mint);
   color: var(--mint-contrast);
   font-weight: 700;
 }
@@ -921,6 +921,56 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 64px; }
 }
 .footer-links { display: flex; gap: 16px; flex-wrap: wrap; }
 .footer-links a { color: var(--text-dim); }
+
+/* Related tools: the four sibling sites in the same portfolio. It sits above
+   the legal line and inside the footer, on the same measure and the same left
+   edge as .footer-inner, so it reads as the footer's first row rather than as
+   a bolted-on link farm. Each entry says what the site does before it says the
+   domain, because "gamutlens.com" tells a reader nothing. */
+.peer-sites {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 24px 20px 0;
+}
+.peer-sites-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+/* Two columns, not four. The longest pair - "Printable graph, lined and staff
+   paper" plus its domain - needs about 300px, and four tracks across the
+   1040px measure give 245px each, which wraps. Two columns fit every pair on
+   one line at every width above a phone. */
+.peer-sites ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px 28px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 620px) {
+  .peer-sites ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.peer-sites li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; min-width: 0; }
+.peer-sites a { color: var(--text-dim); font-size: 13px; font-weight: 600; }
+.peer-sites a:hover { color: var(--mint-dim); }
+.peer-domain { font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
+/* The contact line sits under the peer list, on the same measure, above the
+   legal row. It is one sentence, so it needs no label of its own. */
+.footer-contact {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 14px 20px 0;
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+.footer-contact a { color: var(--text-dim); }
+.footer-contact a:hover { color: var(--mint-dim); }
 
 /* ---------- erabbit mark ---------- */
 .erabbit-mark { display: block; width: 10px; margin: 0 0 0 auto; line-height: 0; cursor: default; }

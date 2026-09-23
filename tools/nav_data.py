@@ -65,6 +65,27 @@ HUBS = [("/articles/", "All 4 QR code guides")]
 # No tier-2 family here.
 FOOTER = []
 
+# Sibling sites in the same portfolio, rendered into the footer of every page
+# that carries the `peers` marker pair. Four links, not nineteen: a reader
+# scans four and reads none of twenty. Each entry is (href, text, domain). The
+# text comes from the target site's own meta description, so the link says what
+# the site does before it says the domain.
+PEERS = [
+    ("https://photoshrink.net/", "Resize, compress and convert images", "photoshrink.net"),
+    ("https://inascii.com/", "ASCII art and text banners", "inascii.com"),
+    ("https://gamutlens.com/", "Color pickers, palettes and contrast", "gamutlens.com"),
+    ("https://paperprintouts.com/", "Printable graph, lined and staff paper", "paperprintouts.com"),
+]
+
+# The portfolio contact address, rendered in the same footer region as PEERS.
+# It is held as (local part, domain, lead-in) and written out with `&#64;` for
+# the `@`, in the href and in the link text. A browser decodes the entity in an
+# attribute value, so the link works for a mouse, a keyboard and a screen
+# reader, while a naive address-harvesting regex misses it. JavaScript is not
+# used to assemble it: a link that needs JS to work is worse than a plain one.
+CONTACT = ("hello", "goodbotbad.bot", "Questions or a problem with a code?")
+
+
 # One-time --migrate: strip the legacy markup and drop the marker pair in the
 # one place the spec allows — a direct child of <body>, immediately after
 # </header> and above <main>. Ops run in order.
@@ -77,4 +98,8 @@ MIGRATE = [
     # destinations a second time further down every generator page.
     {"op": "strip", "pattern": r'\n  <nav class="container-narrow" aria-label="Other QR code types".*?\n  </nav>\n'},
     {"op": "insert_after", "region": "nav", "pattern": r"</header>", "indent": ""},
+    # The related-tools block, as the footer's first row. 404.html has no
+    # footer, so it gets no marker pair and sync_nav leaves it alone.
+    {"op": "insert_after", "region": "peers",
+     "pattern": r'<footer class="site-footer">', "indent": "  "},
 ]
