@@ -837,7 +837,14 @@
       // Leaving the reader must switch the camera light off, not just hide it.
       if (currentMode !== "decode" && typeof window.qrmintStopCamera === "function") window.qrmintStopCamera();
       if (push) history.pushState({ panel: id }, "", href);
-      if (isGenerator) scheduleUpdate();
+      // `window.scheduleUpdate` is assigned by the generator IIFE further down
+      // this file, and that IIFE runs after this one. The first activate() at
+      // load therefore hit a name that did not exist yet, and a bare call threw
+      // `ReferenceError: scheduleUpdate is not defined` on every visit to the
+      // homepage. Nothing was lost by it: the generator IIFE ends with its own
+      // render(). A later panel switch does need the call, and by then the
+      // function is there.
+      if (isGenerator && typeof window.scheduleUpdate === "function") window.scheduleUpdate();
     }
 
     bar.addEventListener("click", (e) => {
