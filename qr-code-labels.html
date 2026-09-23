@@ -36,54 +36,6 @@
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Why is there a ruler printed at the bottom of the sheet?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Because your print dialog can scale the page without telling you, and a few percent is the difference between a grid that lands on die-cut label stock and one that walks off it by the bottom row. The rule is exactly 100 mm end to end and the dashed mark beside it is 4 inches, which is 1.6 mm further. Measure the rule on the first sheet. If it comes out short, the print dialog scaled the page: set it to 100% or Actual size rather than Fit to page, and print again."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Which print dialog settings should I use?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "In Chrome, open More settings and set Scale to Default or Custom 100, and Margins to None. In Safari, untick Scale to fit and set the scale to 100%, with Print Backgrounds on. Both browsers default to fitting the page to their own printable area, which shrinks it by roughly four to six percent. The page tells the printer the exact sheet size and puts every margin inside the layout itself, so it needs no help from the dialog."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need a PDF or a special file?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. The sheet is the page itself, so Print sends it straight to the printer and Save as PDF in the same dialog gives you a PDF at no extra step. Nothing is uploaded, no library is loaded, and the codes are drawn as vectors so they stay crisp at any size your printer works at."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Will these line up with Avery label sheets?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The address-label preset uses the published geometry for Avery 5160 on US Letter, which is 30 labels of 2.625 by 1 inch, and Avery L7160 on A4, which is 21 labels of 63.5 by 38.1 mm. That is the correct starting point, but no browser can promise alignment on die-cut stock, because your printer's own paper handling shifts the sheet by a millimetre or two. Print one sheet on plain paper, hold it against the label stock, and check the rule."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Are the codes checked before I print thirty of them?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Every distinct code on the sheet is read back through the same decoder the scan tool uses, and the verdict appears above the preview. The sheet also reports the smallest printed module in millimetres and warns below about 0.4 mm, which is roughly where ordinary laser toner spread and a phone camera stop agreeing about where a module edge is."
-      }
-    }
-  ]
-}
-</script>
 
 <script>
 (function () {
@@ -98,6 +50,7 @@
 <!-- schema:start -->
 <meta property="og:site_name" content="qrmint.net">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://qrmint.net/"},{"@type":"ListItem","position":2,"name":"QR code label sheets","item":"https://qrmint.net/qr-code-labels/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is there a ruler printed at the bottom of the sheet?","acceptedAnswer":{"@type":"Answer","text":"Because your print dialog can scale the page without telling you, and a few percent is the difference between a grid that lands on die-cut label stock and one that walks off it by the bottom row. The rule is exactly 100\u00a0mm end to end and the dashed mark beside it is 4\u00a0inches, which is 1.6\u00a0mm further. Measure the rule on the first sheet. If it comes out short, the print dialog scaled the page: set it to 100% or Actual size rather than Fit to page, and print again."}},{"@type":"Question","name":"Do I need a PDF or a special file?","acceptedAnswer":{"@type":"Answer","text":"No. The sheet is the page, so Print sends it straight to the printer and Save as PDF in the same dialog gives you a PDF at no extra step. Nothing is uploaded, no library is loaded, and the codes are drawn as vectors so they stay crisp at whatever resolution your printer works at."}},{"@type":"Question","name":"Will these line up with Avery label sheets?","acceptedAnswer":{"@type":"Answer","text":"The address-label preset starts from the published geometry, which is the correct starting point \u2014 but no browser can promise alignment on die-cut stock, because your printer's own paper handling shifts the sheet by a millimetre or two of its own. Print one sheet on plain paper, hold it up against the label stock, and check the rule. That is a minute against a wasted sheet of thirty."}},{"@type":"Question","name":"Can I put a logo in the middle of the codes?","acceptedAnswer":{"@type":"Answer","text":"Not on this page. A logo needs the error-correction level locked to H and a verified render per code, which the generator and the bulk tool both do properly. Design the code there, check it is scan-verified, then bring the data here to lay it out."}},{"@type":"Question","name":"What size should a printed QR code be?","acceptedAnswer":{"@type":"Answer","text":"The usual rule of thumb is that the code should be about a tenth of the distance it will be scanned from \u2014 3\u00a0cm for arm's length, 10\u00a0cm for a code on a wall across a room. The harder limit is the module: below roughly 0.4\u00a0mm per module a home laser printer's toner spread starts closing the gaps, and this page tells you that figure for the sheet you are about to print."}}]}</script>
 <!-- schema:end -->
 </head>
 <body>
