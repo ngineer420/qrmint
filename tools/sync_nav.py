@@ -205,6 +205,19 @@ def render_footernav(url):
     return "\n".join(out)
 
 
+def ncr(text):
+    """Every character as a decimal numeric character reference.
+
+    The HTML parser decodes these while it parses, so an href built this way is
+    a real `mailto:` URL, the anchor keeps its place in the tab order, and a
+    screen reader reads the plain address. Neither `@` nor `mailto:hello`
+    appears in the bytes on disk, which is what an address harvester reads.
+    Nothing here depends on JavaScript: a contact link that needs a script to
+    work is worse than an address in plain sight.
+    """
+    return "".join("&#%d;" % ord(c) for c in text)
+
+
 def render_peers(url):
     """The related-tools block: the sibling sites in the same portfolio.
 
@@ -229,11 +242,11 @@ def render_peers(url):
     contact = getattr(D, "CONTACT", None)
     if contact:
         local, domain, lead = contact
-        # `&#64;` is written raw, not through esc(), because esc() would turn
-        # the `&` into `&amp;` and the address would render as literal text.
-        addr = "%s&#64;%s" % (esc(local), esc(domain))
-        out.append('<p class="footer-contact">%s <a href="mailto:%s">%s</a></p>'
-                   % (esc(lead), addr, addr))
+        address = "%s@%s" % (local, domain)
+        # Entities are written raw, never through esc(): esc() would turn each
+        # `&` into `&amp;` and the address would render as literal text.
+        out.append('<p class="footer-contact">%s <a href="%s">%s</a></p>'
+                   % (esc(lead), ncr("mailto:" + address), ncr(address)))
     return "\n".join(out)
 
 
