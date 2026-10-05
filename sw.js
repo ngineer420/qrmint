@@ -2,7 +2,7 @@
    Run `python3 tools/build_sw.py` to rewrite it after any page or asset
    change. `python3 tools/build_sw.py --check` reports a stale file. */
 
-const VERSION = "f0c1b89432c4";
+const VERSION = "560da4eb3c5c";
 const CACHE = "qrmint-" + VERSION;
 const PRECACHE = [
   "/",
