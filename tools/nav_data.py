@@ -72,11 +72,12 @@ FOOTER = []
 PEERS = []
 
 # The portfolio contact address, rendered in the `peers` footer region.
-# It is held as (local part, domain, lead-in) and written out with `&#64;` for
-# the `@`, in the href and in the link text. A browser decodes the entity in an
-# attribute value, so the link works for a mouse, a keyboard and a screen
-# reader, while a naive address-harvesting regex misses it. JavaScript is not
-# used to assemble it: a link that needs JS to work is worse than a plain one.
+# It is held as (local part, domain, lead-in). `sync_nav.ncr()` writes every
+# character of the href and of the link text as a decimal numeric character
+# reference, so the address never appears in the bytes on disk. The parser
+# decodes them, so the link works for a mouse, a keyboard and a screen reader.
+# JavaScript is not used to assemble it: a link that needs JS to work is worse
+# than a plain one.
 CONTACT = ("hello", "goodbotbad.bot", "Questions or a problem with a code?")
 
 
